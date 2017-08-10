@@ -7,5 +7,7 @@
 /gh-pages
 /settings_*.js
 /tmp
-debug.html
+/*.html
+!/404.html
+!/index.html
 node_modules/
