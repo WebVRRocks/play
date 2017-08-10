@@ -55,6 +55,10 @@
 
   var uaParsed = new UAParser(navigator.userAgent);
   var ua = uaParsed.getResult();
+  ua.os.name = ua.os.name || '';
+  ua.os.version = ua.os.version || '';
+  ua.browser.name = ua.browser.name || '';
+  ua.browser.version = ua.browser.version || '';
   if (!ua.device.vendor && !ua.device.model && !ua.device.type) {
     ua.device.vendor = ua.device.vendor || '';
     ua.device.model = ua.device.model || '';
@@ -178,7 +182,11 @@
   }
 
   function getPath () {
-    return window.location.pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
+    var pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '/index' || pathname === '/index.html') {
+      return '/';
+    }
+    return pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
   }
 
   var pageTitles = {};
@@ -212,12 +220,14 @@
   });
 
   function routeUpdate (href, push) {
+    var path = getPath();
+    document.documentElement.setAttribute('data-path', path);
+
     if (!(href in pageTitles) || href === window.location.href) {
       return false;
     }
 
     var titleEl = document.querySelector('title');
-    var path = getPath();
     var title = pageTitles[path];
     if (path !== '/' && title) {
       titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
@@ -236,8 +246,6 @@
         ga('send', 'pageview');
       }
     }
-
-    document.documentElement.setAttribute('data-path', path);
 
     return true;
   }

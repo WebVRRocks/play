@@ -213,6 +213,10 @@ html[data-path^="/profile"] [data-page~="profile"] {
   display: block;
 }
 
+[data-l10n-id="detecting"] {
+  opacity: .1;
+}
+
 [data-l10n-id$="_unknown"] * {
   opacity: .7;
 }
