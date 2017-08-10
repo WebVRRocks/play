@@ -10,12 +10,6 @@
   width: 64rem;
 }
 
-/*.mw7 {
-  max-width: 64rem;
+.a11y-green {
+  color: #2ecc40;
 }
-
-@media screen and (min-width: 60em) {
-  .mw7-l {
-    max-width: 64rem;
-  }
-}*/

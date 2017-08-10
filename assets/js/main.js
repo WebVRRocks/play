@@ -1,4 +1,4 @@
-/* global UAParser */
+/* global ga, UAParser */
 (function () {
   // Adapted from source: https://github.com/feross/arch/blob/master/browser.js
   function arch () {
@@ -107,6 +107,57 @@
   } else {
     vrdisplaysValueEl.innerHTML = 'Unsupported';
   }
+
+  function getPath () {
+    return window.location.pathname.replace(/\//g, '') + window.location.hash.substr(1);
+  }
+
+  var pageTitles = {};
+
+  window.addEventListener('load', function () {
+    var debugHeadingEl = document.querySelector('[data-l10n-id="debug"]');
+    pageTitles.debug = debugHeadingEl.textContent;
+
+    var path = getPath();
+    if (path in pageTitles) {
+      routeUpdate(path, false);
+    }
+  });
+
+  function routeUpdate (href, push) {
+    var titleEl = document.querySelector('title');
+    var path = getPath();
+    var title = pageTitles[path];
+    if (title) {
+      titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
+      titleEl.setAttribute('data-l10n-id', 'title_page');
+    } else {
+      titleEl.removeAttribute('data-l10n-args');
+      titleEl.setAttribute('data-l10n-id', 'title_default');
+    }
+    if (push !== false) {
+      history.pushState(null, title, href);
+      if ('ga' in window) {
+        ga('set', {
+          page: window.location.pathname,
+          title: title
+        });
+        ga('send', 'pageview');
+      }
+    }
+    document.documentElement.setAttribute('data-path', window.location.pathname.replace(/\/+$/, ''));
+  }
+
+  document.addEventListener('click', function (evt) {
+    if (evt.target.tagName === 'A' &&
+        evt.target.origin === window.location.origin) {
+      evt.preventDefault();
+      // navCheckbox.checked = false;
+      if (evt.target.href !== location.href) {
+        routeUpdate(e.target.href, true);
+      }
+    }
+  }, true);
 
   // var scenesFormEl = document.querySelector('#scenes-form');
   // var filtersFormEl = document.querySelector('#filters-form');

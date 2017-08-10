@@ -198,3 +198,17 @@ input:checked ~ a .glow:hover {
 [data-stable~="false"][data-archived~="false"] {
   display: none;
 }
+
+[data-page] {
+  display: none;
+}
+
+html:not([data-path]) [data-page~="play"],
+html[data-path="/"] [data-page~="play"],
+html[data-path^="/play"] [data-page~="play"] {
+  display: block;
+}
+
+html[data-path^="/debug"] [data-page~="debug"] {
+  display: block;
+}

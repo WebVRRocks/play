@@ -1,3 +1,10 @@
+title_default = Play WebVR • Explore Virtual Reality on the Web
+title_page = { $title } • WebVR
+
+play = Play
+
+debug = Debug Mode
+
 detecting = <span data-l10n-id="detecting">Detecting &hellip;</span>
 
 os = Operating System

@@ -1,9 +1,10 @@
 <!doctype html>
 <html>
   <head>
+    <base href="/">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Play WebVR • Explore Virtual Reality on the Web</title>
+    <title data-l10n-id="title_default">Play WebVR • Explore Virtual Reality on the Web</title>
     <link rel="stylesheet" href="assets/css/tachyons-custom.css">
     <link rel="stylesheet" href="assets/css/tachyons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -15,9 +16,13 @@
     <script src="assets/js/l20n.js" defer></script>
     <style id="css-dynamic-rules"></style>
   </head>
-  <body class="bg-near-black white">
-    <header id="debug" data-section="debug" class="pa3 pa5-ns pa6-l">
-      <dl class="lh-copy f5 fw3">
+  <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+    <section id="play" data-page="play">
+      <h2 class="a11y-green bb f2 fw5 pb4 lh-solid" data-l10n-id="play">Play</h2>
+    </section>
+    <section id="debug" data-page="debug">
+      <h2 class="a11y-green bb f2 fw5 pb4 lh-solid" data-l10n-id="debug">Debug</h2>
+      <dl class="lh-copy f5 fw3 pt5">
         <dt class="o-60" data-l10n-id="os">Operating System</dt>
         <dd class="f2 fw4" data-l10n-id="os_value" data-l10n-args='{"name": "Unknown", "version": ""}'>
           <span data-l10n-id="detecting">Detecting &hellip;</span>
@@ -39,7 +44,7 @@
           <span data-l10n-id="detecting">Detecting &hellip;</span>
         </dd>
       </dl>
-    </header>
+    </section>
     <!-- <script src="assets/js/ga.js" async defer></script> -->
     <script src="assets/js/ua-parser.min.js"></script>
     <script src="assets/js/main.js"></script>
