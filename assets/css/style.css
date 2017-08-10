@@ -212,3 +212,7 @@ html[data-path^="/play"] [data-page~="play"] {
 html[data-path^="/profile"] [data-page~="profile"] {
   display: block;
 }
+
+[data-l10n-id$="_unknown"] * {
+  opacity: .7;
+}
