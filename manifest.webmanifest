@@ -7,8 +7,8 @@
   "start_url": "./?src=manifest",
   "scope": "./",
   "display": "fullscreen",
-  "theme_color": "#177bdb",
-  "background_color": "#000",
+  "theme_color": "#01ff70",
+  "background_color": "#111",
   "icons": [
     {
       "src": "img/logo.svg",
