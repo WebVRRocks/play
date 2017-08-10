@@ -45,17 +45,18 @@
     return 'x86';
   }
 
-  var cpuArch = arch();
-
   var uaParsed = new UAParser(navigator.userAgent);
   var ua = uaParsed.getResult();
   ua.device.model = ua.device.model || '';
   ua.device.type = ua.device.type || '';
   ua.device.vendor = ua.device.vendor || '';
+  ua.cpu.architecture = arch();
 
   var osValueEl = document.querySelector('[data-l10n-id="os_value"]');
   var browserValueEl = document.querySelector('[data-l10n-id="browser_value"]');
   var deviceValueEl = document.querySelector('[data-l10n-id="device_value"]');
+  var cpuValueEl = document.querySelector('[data-l10n-id="cpu_value"]');
+  var vrdisplaysValueEl = document.querySelector('#vrdisplays_value');
 
   if (osValueEl) {
     if (ua.os.name) {
@@ -84,8 +85,28 @@
       deviceValueEl.innerHTML = '&nbsp;';
     }
   }
+  if (cpuValueEl) {
+    if (ua.cpu.architecture) {
+      var cpuStr = JSON.stringify(ua.cpu);
+      cpuValueEl.innerHTML = '&nbsp;';
+      cpuValueEl.setAttribute('data-l10n-args', cpuStr);
+    }
+  }
 
-  console.log(cpuArch);
+  if ('getVRDisplays' in navigator) {
+    navigator.getVRDisplays().then(function (displays) {
+      vrdisplaysValueEl.innerHTML = '';
+      displays.forEach(function (display) {
+        var displayEl = document.createElement('div');
+        var strongEl = document.createElement('strong');
+        strongEl.textContent = display.displayName;
+        displayEl.appendChild(strongEl);
+        vrdisplaysValueEl.appendChild(displayEl);
+      });
+    });
+  } else {
+    vrdisplaysValueEl.innerHTML = 'Unsupported';
+  }
 
   // var scenesFormEl = document.querySelector('#scenes-form');
   // var filtersFormEl = document.querySelector('#filters-form');
