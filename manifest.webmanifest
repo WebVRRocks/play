@@ -11,16 +11,15 @@
   "background_color": "#111",
   "icons": [
     {
-      "src": "/assets/img/logo.svg",
+      "src": "/assets/img/icon.svg",
       "sizes": "290x290",
       "type": "image/svg",
       "border-radius": "3px"
     },
     {
-      "src": "/assets/img/logo-256.png",
-      "sizes": "580x580",
-      "type": "image/png",
-      "density": "2"
+      "src": "/assets/img/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
     },
     {
       "src": "favicon.ico",
