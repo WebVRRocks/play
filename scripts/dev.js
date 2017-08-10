@@ -1,3 +1,5 @@
+const path = require('path');
+
 const urlParse = require('url').parse;
 
 const liveServer = require('live-server');
@@ -10,7 +12,6 @@ liveServer.start({
   host: process.env.HOST || '0.0.0.0',
   open: false,
   ignore: '.git,node_modules',
-  // file: 'index.html',  // When set, serve this file for every 404 (useful for SPAs).
   logLevel: 2,  // 0 = errors only; 1 = some errors; 2 = many errors.
   middleware: [
     function (req, res, next) {
@@ -26,11 +27,18 @@ liveServer.start({
         return;
       }
 
-      Object.keys(spaRoutes).forEach(route => {
-        if (path.startsWith(route)) {
-          req.url = spaRoutes[route];
+      if (path !== '/' && !path.startsWith('/assets') && !path.includes('.')) {
+        let redirectPath = '/404.html';
+        const spaRoutesKeys = Object.keys(spaRoutes);
+        for (let idx = 0; idx < spaRoutesKeys.length; idx++) {
+          let route = spaRoutesKeys[idx];
+          if (route !== '/' && path === route) {
+            redirectPath = spaRoutes[route];
+            break;
+          }
         }
-      });
+        req.url = redirectPath;
+      }
       next();
     }
   ]

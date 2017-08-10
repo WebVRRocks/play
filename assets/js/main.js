@@ -109,22 +109,41 @@
   }
 
   function getPath () {
-    return window.location.pathname.replace(/\//g, '') + window.location.hash.substr(1);
+    return window.location.pathname.replace(/\/+$/g, '');
   }
 
   var pageTitles = {};
 
   window.addEventListener('load', function () {
-    var debugHeadingEl = document.querySelector('[data-l10n-id="debug"]');
-    pageTitles.debug = debugHeadingEl.textContent;
+    var titleEl = document.querySelector('[data-l10n-id="title_default"]');
+    pageTitles['/'] = titleEl.textContent;
 
-    var path = getPath();
-    if (path in pageTitles) {
+    var debugHeadingEl = document.querySelector('[data-l10n-id="debug"]');
+    pageTitles['/debug'] = debugHeadingEl.textContent;
+
+    var redirectPath = null;
+    try {
+      redirectPath = window.sessionStorage.redirect;
+      delete window.sessionStorage.redirect;
+    } catch (err) {
+    }
+    if (redirectPath) {
+      if (redirectPath in pageTitles && redirectPath !== window.location.href) {
+        console.log('redirected to', redirectPath);
+        history.replaceState(null, null, redirectPath);
+        routeUpdate(redirectPath, false);
+      }
+    } else {
+      var path = getPath();
       routeUpdate(path, false);
     }
   });
 
   function routeUpdate (href, push) {
+    if (!(href in pageTitles) || href === window.location.href) {
+      return false;
+    }
+
     var titleEl = document.querySelector('title');
     var path = getPath();
     var title = pageTitles[path];
@@ -136,7 +155,7 @@
       titleEl.setAttribute('data-l10n-id', 'title_default');
     }
     if (push !== false) {
-      history.pushState(null, title, href);
+      window.history.pushState(null, title, href);
       if ('ga' in window) {
         ga('set', {
           page: window.location.pathname,
@@ -145,7 +164,10 @@
         ga('send', 'pageview');
       }
     }
+
     document.documentElement.setAttribute('data-path', window.location.pathname.replace(/\/+$/, ''));
+
+    return true;
   }
 
   document.addEventListener('click', function (evt) {
@@ -153,7 +175,7 @@
         evt.target.origin === window.location.origin) {
       evt.preventDefault();
       // navCheckbox.checked = false;
-      if (evt.target.href !== location.href) {
+      if (evt.target.href !== window.location.href) {
         routeUpdate(e.target.href, true);
       }
     }
