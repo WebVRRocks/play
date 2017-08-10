@@ -117,7 +117,7 @@
   }
 
   function getPath () {
-    return window.location.pathname.replace(/\/+$/g, '');
+    return window.location.pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
   }
 
   var pageTitles = {};
@@ -173,7 +173,7 @@
       }
     }
 
-    document.documentElement.setAttribute('data-path', window.location.pathname.replace(/\/+$/, ''));
+    document.documentElement.setAttribute('data-path', path);
 
     return true;
   }

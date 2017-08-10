@@ -8,12 +8,24 @@
     <meta name="robots" content="none">
     <script>
       (function () {
+        function endsWith (str) {
+          if (String.prototype.endsWith) {
+            return String.prototype.endsWith.call(str);
+          }
+          return str.lastIndexOf('g', str.length - 1) === str.length - 1;
+        }
+
         var routes = {
         };
         var redirects = {
         };
 
         var path = window.location.pathname.toLowerCase().replace(/\/+$/g, '');
+
+        if (endsWith(path, '.html')) {
+          window.location.href = path.replace(/.html/i, '');
+          return;
+        }
 
         var route;
         var redirectsKeys = Object.keys(redirects);

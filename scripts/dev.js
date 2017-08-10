@@ -18,16 +18,15 @@ liveServer.start({
       var path = urlParse(req.url).pathname;
 
       // Handle redirects for URLs with trailing slashes.
-      if (path !== '/' && path.endsWith('/')) {
+      if (path.endsWith('.html') || (path !== '/' && path.endsWith('/'))) {
         res.statusCode = 302;
-        res.setHeader('Location', req.url.replace(/\/+$/, ''));
+        res.setHeader('Location', req.url.replace(/\/+$/, '').replace(/.html$/, ''));
         res.setHeader('Content-Length', '0');
-        res.end();
         next();
         return;
       }
 
-      if (path !== '/' && !path.startsWith('/assets') && !path.includes('.')) {
+      if (path !== '/' && !path.startsWith('/assets')) {
         let redirectPath = '/404.html';
         const spaRoutesKeys = Object.keys(spaRoutes);
         for (let idx = 0; idx < spaRoutesKeys.length; idx++) {
