@@ -1,7 +1,7 @@
 {
-  "name": "WebVR Agent",
-  "short_name": "WebVR Agent",
-  "description": "UI helper for presenting and navigating WebVR experiences.",
+  "name": "WebVR Kiosk",
+  "short_name": "WebVR",
+  "description": "Explore Virtual Reality on the Web.",
   "lang": "en",
   "dir": "ltr",
   "start_url": "./?src=manifest",
@@ -11,13 +11,13 @@
   "background_color": "#111",
   "icons": [
     {
-      "src": "img/logo.svg",
+      "src": "/assets/img/logo.svg",
       "sizes": "290x290",
       "type": "image/svg",
       "border-radius": "3px"
     },
     {
-      "src": "img/logo-256.png",
+      "src": "/assets/img/logo-256.png",
       "sizes": "580x580",
       "type": "image/png",
       "density": "2"

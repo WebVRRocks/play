@@ -209,6 +209,6 @@ html[data-path^="/play"] [data-page~="play"] {
   display: block;
 }
 
-html[data-path^="/debug"] [data-page~="debug"] {
+html[data-path^="/profile"] [data-page~="profile"] {
   display: block;
 }

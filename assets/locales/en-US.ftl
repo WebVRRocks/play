@@ -3,7 +3,7 @@ title_page = { $title } • WebVR
 
 play = Play
 
-debug = Debug Mode
+system_profile = System Profile
 
 detecting = <span data-l10n-id="detecting">Detecting &hellip;</span>
 

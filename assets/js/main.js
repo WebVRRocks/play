@@ -1,5 +1,13 @@
 /* global ga, UAParser */
 (function () {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js',).then(function (reg) {
+      console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
+    }).catch(function (err) {
+      console.log('Service Worker registration failed:', err);
+    });
+  }
+
   // Adapted from source: https://github.com/feross/arch/blob/master/browser.js
   function arch () {
     /**
@@ -118,8 +126,8 @@
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
     pageTitles['/'] = titleEl.textContent;
 
-    var debugHeadingEl = document.querySelector('[data-l10n-id="debug"]');
-    pageTitles['/debug'] = debugHeadingEl.textContent;
+    var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
+    pageTitles['/profile'] = profileHeadingEl.textContent;
 
     var redirectPath = null;
     try {
@@ -147,7 +155,7 @@
     var titleEl = document.querySelector('title');
     var path = getPath();
     var title = pageTitles[path];
-    if (title) {
+    if (path !== '/' && title) {
       titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
       titleEl.setAttribute('data-l10n-id', 'title_page');
     } else {
