@@ -18,8 +18,8 @@ os_compat_experimental = <span data-os-name="experimental">Experimentally</stron
 os_compat_polyfilled = <span data-os-name="polyfilled">Polyfilled</strong> support available
 os_compat_unsupported = <span data-os-name="unsupported">Unsupported</strong>
 
-os_compat_message_experimental_firefox_download = Available in <a href="https://www.mozilla.org/firefox/channel/desktop/#nightly" rel="noreferrer noopener">Firefox Nightly</a> for macOS – <a href="https://download.mozilla.org/?product=firefox-nightly-latest-ssl&amp;os=osx" rel="noreferrer noopener">Download now!</a>
-os_compat_message_experimental_firefox_enable = From Firefox Nightly, load <code>about:config</code> in your address bar, and enable <code>dom.vr.enabled</code> to <code>true</code>.
+os_compat_message_experimental_firefox_download = Available in <a href="https://www.mozilla.org/firefox/channel/desktop/#beta" rel="noreferrer noopener">Firefox Beta (version 56)</a> for macOS – <a href="https://www.mozilla.org/firefox/channel/desktop/#beta" rel="noreferrer noopener">Download now!</a>
+os_compat_message_experimental_firefox_enable = From Firefox Beta, load <code>about:config</code> in your address bar, and double-click on <code>dom.vr.enabled</code> and <code>dom.vr.openvr.enabled</code> to set both to <code>true</code>.
 
 browser = Browser
 browser_value = <strong data-browser-name="{ $name }">{ $name }</strong> <span data-browser-version="{ $version }">{ $version }</span>
