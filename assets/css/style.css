@@ -220,3 +220,30 @@ html[data-path^="/profile"] [data-page~="profile"] {
 [data-l10n-id$="_unknown"] * {
   opacity: .7;
 }
+
+.compat-card {
+  margin-top: 1rem;
+  position: relative;
+}
+
+.compat-card[data-l10n-id$="_experimental"] {
+  border-color: rgba(46,204,64,.4);
+  color: rgba(46,204,64,.8);
+  line-height: 20px;
+}
+
+.compat-card[data-l10n-id$="_experimental"]:before {
+  background: url(../img/smiley_happy.svg) .15rem 50% no-repeat;
+  background-size: 20px auto;
+  content: "";
+  display: inline-block;
+  height: 20px;
+  opacity: .6;
+  vertical-align: top;
+  width: 25px;
+}
+
+.compat-card[data-l10n-id$="_experimental"] span {
+  padding-left: .3rem;
+  padding-right: .15rem;
+}

@@ -72,6 +72,8 @@
   var cpuValueEl;
   var vrdisplaysValueEl;
 
+  var osCompatValueEl;
+
   var supports = {};
 
   var l10nStrings = {};
@@ -82,6 +84,8 @@
     deviceValueEl = document.querySelector('#device_value');
     cpuValueEl = document.querySelector('#cpu_value');
     vrdisplaysValueEl = document.querySelector('#vrdisplays_value');
+
+    osCompatValueEl = document.querySelector('#os_compat_value');
 
     supports.touch = 'ontouchstart' in window;
     supports.mobile = isMobile();
@@ -108,6 +112,32 @@
       } else {
         osValueEl.removeAttribute('data-l10n-args');
         osValueEl.setAttribute('data-l10n-id', 'os_value_unknown');
+      }
+
+      osCompatValueEl.innerHTML = '&nbsp;';
+
+      if (ua.os.name === 'Windows') {
+        if (ua.os.version.indexOf('10') === 0) {
+          osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_supported');
+        } else {
+          osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_unsupported');
+        }
+      } else if (ua.os.name === 'Mac OS') {
+        if (ua.os.version.indexOf('10.') === 0) {
+          osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_experimental');
+        } else {
+          osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_unsupported');
+        }
+      } else if (ua.os.name === 'Linux') {
+        if (ua.os.version.indexOf('10.') === 0) {
+          osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_experimental');
+        }
+      } else if (ua.os.name === 'Android') {
+        // TODO: Check the version of Android.
+        osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_experimental');
+      } else if (ua.os.name === 'iOS') {
+        // TODO: Check the version of iOS.
+        osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_polyfilled');
       }
     }
 

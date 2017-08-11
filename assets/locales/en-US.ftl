@@ -11,11 +11,16 @@ unknown = <span data-unknown="true">Unknown</span>
 
 os = Operating System
 os_value = <strong data-os-name="{ $name }">{ $name }</strong> <span data-os-version="{ $version }">{ $version }</span>
-os_value_unknown = <span data-os-name="Unknown">Unknown</strong>
+os_value_unknown = <span data-os-name="unknown">Unknown</strong>
+
+os_compat_supported = <span data-os-name="supported" class="a11y-green">Supported</strong>
+os_compat_experimental = <span data-os-name="experimental" class="yellow">Experimentally</strong> supported
+os_compat_polyfilled = <span data-os-name="polyfilled" class="orange">Polyfilled</strong> support available
+os_compat_unsupported = <span data-os-name="unsupported" class="red">Unsupported</strong>
 
 browser = Browser
 browser_value = <strong data-browser-name="{ $name }">{ $name }</strong> <span data-browser-version="{ $version }">{ $version }</span>
-browser_value_unknown = <span data-browser-name="Unknown">Unknown</strong>
+browser_value_unknown = <span data-browser-name="unknown">Unknown</strong>
 
 device = Device
 device_value = <strong data-device-vendor="{ $vendor }">{ $vendor }</strong> <strong data-device-model="{ $model }">{ $model }</strong> <span data-device-type="{ $type }">{ $type }</span>
@@ -27,7 +32,7 @@ cpu = CPU
 cpu_value = <strong data-cpu-architecture="{ $architecture }">{ $architecture }</strong>
 cpu_value_32_bit = <strong data-cpu-architecture="32-bit">32-bit</strong>
 cpu_value_64_bit = <strong data-cpu-architecture="64-bit">64-bit</strong>
-cpu_value_unknown = <span data-cpu-architecture="Unknown">Unknown</strong>
+cpu_value_unknown = <span data-cpu-architecture="unknown">Unknown</strong>
 
 vrdisplays = VR Displays
 
