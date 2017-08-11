@@ -1,17 +1,17 @@
-# mainframe
+# [Play WebVR](https://play.webvr.rocks/)
 
-An **[index](https://aframevr-userland.github.io/mainframe/)** of WebVR scenes made with **[A-Frame](https://aframe.io/)**.
+A kiosk for launching and testing WebVR scenes.
 
-**[View the A-Frame Index!](https://aframevr-userland.github.io/mainframe/)
+[Load **play.webvr.rocks** now!]
 
 
 ### Development
 
-Clone this Git repository and install the [Node](https://nodejs.org/en/download/) dependencies:
+Clone this Git repository, and install the [Node](https://nodejs.org/en/download/) dependencies:
 
 ```sh
-git clone git@github.com:aframevr-userland/mainframe.git
-cd mainframe
+mkdir -p webvrrocks && cd webvrrocks
+git clone git@github.com:webvrrocks/play.git && cd play
 npm install
 ```
 
@@ -30,6 +30,6 @@ You can copy, modify, distribute, and perform this work, even for commercial pur
 
 For more information, refer to these following links:
 
-* a copy of the [license](LICENSE.md) in [this source-code repository](https://github.com/aframevr-userland/mainframe)
+* a copy of the [license](LICENSE.md) in [this source-code repository](https://github.com/webvrrocks/play)
 * the [human-readable summary](https://creativecommons.org/publicdomain/zero/1.0/) of the [full text of the legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
 * the [full text of the legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
