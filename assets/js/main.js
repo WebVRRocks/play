@@ -85,7 +85,7 @@
     cpuValueEl = document.querySelector('#cpu_value');
     vrdisplaysValueEl = document.querySelector('#vrdisplays_value');
 
-    osCompatValueEl = document.querySelector('#os_compat_value');
+    osCompatValueEl = document.querySelector('#os_compat_value > span');
 
     supports.touch = 'ontouchstart' in window;
     supports.mobile = isMobile();
@@ -125,6 +125,16 @@
       } else if (ua.os.name === 'Mac OS') {
         if (ua.os.version.indexOf('10.') === 0) {
           osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_experimental');
+          var msgEl = osCompatValueEl.parentNode.querySelector('[data-l10n-id^="os_compat_message_"]');
+          if (!msgEl) {
+            msgEl = document.createElement('p');
+            osCompatValueEl.parentNode.appendChild(msgEl);
+          }
+          if (ua.browser.name === 'Firefox' && parseFloat(ua.browser.version) > 55.0) {
+            msgEl.setAttribute('data-l10n-id', 'os_compat_message_experimental_firefox_enable');
+          } else {
+            msgEl.setAttribute('data-l10n-id', 'os_compat_message_experimental_firefox_download');
+          }
         } else {
           osCompatValueEl.setAttribute('data-l10n-id', 'os_compat_unsupported');
         }

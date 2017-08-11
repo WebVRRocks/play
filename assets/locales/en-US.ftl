@@ -13,10 +13,13 @@ os = Operating System
 os_value = <strong data-os-name="{ $name }">{ $name }</strong> <span data-os-version="{ $version }">{ $version }</span>
 os_value_unknown = <span data-os-name="unknown">Unknown</strong>
 
-os_compat_supported = <span data-os-name="supported" class="a11y-green">Supported</strong>
-os_compat_experimental = <span data-os-name="experimental" class="yellow">Experimentally</strong> supported
-os_compat_polyfilled = <span data-os-name="polyfilled" class="orange">Polyfilled</strong> support available
-os_compat_unsupported = <span data-os-name="unsupported" class="red">Unsupported</strong>
+os_compat_supported = <span data-os-name="supported">Supported</strong>
+os_compat_experimental = <span data-os-name="experimental">Experimentally</strong> supported
+os_compat_polyfilled = <span data-os-name="polyfilled">Polyfilled</strong> support available
+os_compat_unsupported = <span data-os-name="unsupported">Unsupported</strong>
+
+os_compat_message_experimental_firefox_download = Available in <a href="https://www.mozilla.org/firefox/channel/desktop/#nightly" rel="noreferrer noopener">Firefox Nightly</a> for macOS – <a href="https://download.mozilla.org/?product=firefox-nightly-latest-ssl&amp;os=osx" rel="noreferrer noopener">Download now!</a>
+os_compat_message_experimental_firefox_enable = From Firefox Nightly, load <code>about:config</code> in your address bar, and enable <code>dom.vr.enabled</code> to <code>true</code>.
 
 browser = Browser
 browser_value = <strong data-browser-name="{ $name }">{ $name }</strong> <span data-browser-version="{ $version }">{ $version }</span>
