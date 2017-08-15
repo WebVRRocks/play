@@ -213,6 +213,20 @@ html[data-path^="/profile"] [data-page~="profile"] {
   display: block;
 }
 
+html[data-path^="/play"] {
+}
+
+html[data-path^="/play"],
+html[data-path^="/play"] body {
+  height: 100%;
+  width: 100%;
+}
+
+html[data-path^="/play"] [data-page~="play"] {
+  background: red;
+  /*position: relative;*/
+}
+
 [data-l10n-id="detecting"] {
   opacity: .1;
 }
@@ -253,4 +267,29 @@ html[data-path^="/profile"] [data-page~="profile"] {
   color: #eee;
   opacity: .7;
   padding: .75rem .5rem;
+}
+
+[itemprop="image"] {
+  background-repeat: no-repeat;
+  display: block;
+  height: 10rem;
+  padding-top: 1rem;
+  width: 10rem;
+}
+
+[data-slug="a_painter"] [itemprop="image"] {
+  background-size: fill;
+  background-position: 50%;
+}
+
+[data-slug="puzzle_rain"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="a_blast"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="puzzle_rain"] a:hover [itemprop="image"] {
+  background-image: url(http://localhost:9999/assets/img/puzzle-rain-animated-preview-spectator.gif) !important;
 }

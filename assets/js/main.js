@@ -261,7 +261,7 @@
 
   function routeUpdate (href, push) {
     var path = getPath();
-    document.documentElement.setAttribute('data-path', path);
+    document.documentElement.setAttribute('data-path', path === '/' ? '/play' : path);
 
     if (!(href in pageTitles) || href === window.location.href) {
       return false;
