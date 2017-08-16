@@ -1,0 +1,251 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  width: 100%;
+}
+
+html,
+body {
+  position: relative;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  font: 300 1rem/1.2 BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+  line-height: 1.5rem;
+}
+
+.apink {
+  color: #ef2d5e;
+}
+
+.bg-apink {
+  background-color: #ef2d5e;
+}
+
+.code,
+.tt,
+code,
+tt {
+  font-family: Consolas, Courier New, monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+.text-hidden {
+  text-indent: -200%;
+}
+
+.hide-child .child {
+  opacity: 1;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+
+.hide-child:active .child,
+.hide-child:focus .child,
+.hide-child:hover .child {
+  opacity: 0;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+
+.hide-sibling ~ .sibling {
+  opacity: 1;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+
+.hide-sibling:active ~ .sibling,
+.hide-sibling:focus ~ .sibling,
+.hide-sibling:hover ~ .sibling {
+  opacity: 0;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+
+.form-label[data-platform~="htc_vive"]:before {
+  background-image: url(../img/htc_vive.svg);
+}
+
+.form-label[data-platform~="oculus_rift"]:before {
+  background-image: url(../img/oculus_rift.svg);
+  background-size: auto 40px;
+}
+
+.form-label[data-platform~="google_daydream"]:before {
+  background-image: url(../img/google_daydream.svg);
+}
+
+.form-label[data-platform~="google_cardboard"]:before {
+  background-image: url(../img/google_cardboard.svg);
+}
+
+.form-label[data-platform~="samsung_gear_vr"]:before {
+  background-image: url(../img/samsung_gear_vr.svg);
+}
+
+.form-label[data-platform~="osvr_hdk2"]:before {
+  background-image: url(../img/osvr_hdk2.svg);
+}
+
+.form-label[data-platform].checked,
+.form-label[data-platform].checked:hover {
+  border-bottom-color: rgba(0,0,0,.6);
+}
+
+.form-label[data-platform].checked {
+  border-bottom-color: rgba(0,0,0,.9);
+  transition: .15s opacity ease-in;
+  opacity: 1;
+}
+
+[data-filtered="true"] [data-supports] {
+  display: block;
+}
+
+[data-filtered-htc_vive="true"] [data-supports]:not([data-supports*="htc_vive+"]):not([data-supports~="htc_vive"]),
+[data-filtered-oculus_rift="true"] [data-supports]:not([data-supports*="oculus_rift+"]):not([data-supports~="oculus_rift"]),
+[data-filtered-google_daydream="true"] [data-supports]:not([data-supports*="google_daydream+"]):not([data-supports~="google_daydream"]),
+[data-filtered-samsung_gear_vr="true"] [data-supports]:not([data-supports*="samsung_gear_vr+"]):not([data-supports~="samsung_gear_vr"]),
+[data-filtered-google_cardboard="true"] [data-supports]:not([data-supports*="google_cardboard+"]):not([data-supports~="google_cardboard"]),
+[data-filtered-osvr_hdk2="true"] [data-supports]:not([data-supports*="osvr_hdk2+"]):not([data-supports~="osvr_hdk2"]) {
+  display: none;
+}
+
+[data-stable~="false"][data-archived~="false"] {
+  display: none;
+}
+
+[data-page] {
+  display: none;
+}
+
+html[data-layout~="play"] [data-page~="play"],
+html[data-layout~="profile"] [data-page~="profile"] {
+  display: block;
+}
+
+.scene[data-state~="pending"] {
+  opacity: 0;
+  transition: .5s opacity ease-in;
+}
+
+.scene[data-state~="loaded"] {
+  opacity: 1;
+}
+
+html[data-layout~="play"],
+html[data-layout~="play"] body {
+  height: 100%;
+  width: 100%;
+}
+
+[data-l10n-id="detecting"] {
+  opacity: .1;
+}
+
+[data-l10n-id$="_unknown"] * {
+  opacity: .7;
+}
+
+.compat-card [data-l10n-id$="_experimental"] {
+  line-height: 20px;
+}
+
+.compat-card [data-l10n-id$="_experimental"]:before {
+  background: url(../img/smiley_happy.svg) .15rem 50% no-repeat;
+  background-size: 20px auto;
+  content: "";
+  display: inline-block;
+  height: 20px;
+  opacity: .6;
+  vertical-align: top;
+  width: 28px;
+}
+
+.compat-card > span {
+  background-color: rgba(0,0,0,.5);
+  border-bottom: 1px solid rgba(0,0,0,.35);
+  border-radius: .25rem .25rem 0 0;
+  display: block;
+  padding: .5rem;
+}
+
+.compat-card [data-l10n-id^="os_compat_message_"] {
+  background-color: #111;
+  border-radius: 0 0 .25rem .25rem;
+  color: #eee;
+  opacity: .7;
+  padding: .75rem .5rem;
+}
+
+[itemprop="details"] {
+  padding-top: 2vh;
+}
+
+[itemprop="image"] {
+  background-repeat: no-repeat;
+  display: block;
+  height: 14vh;
+  width: 100%;
+}
+
+[data-slug="a_painter"] [itemprop="image"] {
+  background-size: fill;
+  background-position: 50%;
+}
+
+[data-slug="puzzle_rain"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="a_blast"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="puzzle_rain"] a:hover [itemprop="image"] {
+  background-image: url(../img/scenes/puzzle_rain/puzzle-rain-animated-preview-spectator.gif) !important;
+}
+
+.focusable-radio:focus ~ [itemprop="details"] [itemprop="image"],
+.focusable-radio:checked ~ [itemprop="details"] [itemprop="image"],
+.focusable-link:hover [itemprop="image"] {
+  box-shadow: 0 0 10px 5px rgba(255,255,255,.1);
+}
+
+.focusable-radio:focus ~ [itemprop="details"] [itemprop="url"],
+.focusable-radio:checked ~ [itemprop="details"] [itemprop="url"] {
+  opacity: 1;
+}
+
+[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"] {
+  opacity: .5;
+  transition: .15s opacity ease-in-out;
+}
+
+[data-form="scenes"][data-scene] .focusable-radio:checked ~ [itemprop="details"] {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.focusable-link:focus {
+  -moz-outline-style: none;
+  outline: 0;
+}

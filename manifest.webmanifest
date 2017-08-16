@@ -1,0 +1,38 @@
+{
+  "name": "WebVR Kiosk",
+  "short_name": "WebVR",
+  "description": "Explore Virtual Reality on the Web.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./?src=manifest",
+  "scope": "./",
+  "display": "fullscreen",
+  "theme_color": "#01ff70",
+  "background_color": "#111",
+  "icons": [
+    {
+      "src": "/assets/img/icon.svg",
+      "sizes": "290x290",
+      "type": "image/svg",
+      "border-radius": "3px"
+    },
+    {
+      "src": "/assets/img/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32 48x48 64x64 256x256",
+      "type": "image/x-icon"
+    }
+  ],
+  "vr_default_display": "HTC Vive",
+  "vr_available_displays": [
+    "HTC Vive",
+    "Oculus Rift",
+    "Google Daydream",
+    "Samsung Gear VR",
+    "Google Cardboard"
+  ]
+}

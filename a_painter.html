@@ -1,0 +1,117 @@
+<!doctype html>
+<html data-path="/play" data-layout="play">
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-l10n-id="title_default">Play WebVR • Explore Virtual Reality on the Web</title>
+    <link rel="stylesheet" href="assets/css/tachyons-custom.css">
+    <link rel="stylesheet" href="assets/css/tachyons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="theme-color" content="#24aef4">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" sizes="256x256" href="assets/img/icon-256.png">
+    <link rel="icon" sizes="256x256" href="assets/img/icon-256.svg">
+    <link rel="mask-icon" href="/rocks/mask-84.svg" color="#24aef4">
+    <!-- Origin Trial Token, feature = WebVR (For Chrome M59+), origin = https://ngrok.io, expires = 2017-09-21 -->
+    <meta http-equiv="origin-trial" data-feature="WebVR (For Chrome M59+)" data-expires="2017-09-21" content="AvRVCddb27Bor+JGrb3uWtYIR8qPZzh6zPQ2MC+RXTF4RntkeWrkzIGnj8vyfDJMaCwC8QefC1fKPcg4a+hWegYAAABKeyJvcmlnaW4iOiJodHRwczovL25ncm9rLmlvOjQ0MyIsImZlYXR1cmUiOiJXZWJWUjEuMSIsImV4cGlyeSI6MTUwNTk1ODIxM30=">
+    <meta name="defaultLanguage" content="en-US">
+    <meta name="availableLanguages" content="en-US">
+    <link rel="localization" href="assets/locales/{locale}.ftl">
+    <script src="assets/js/l20n.js" defer></script>
+    <style id="css-dynamic-rules"></style>
+  </head>
+  <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+    <section id="play" data-page="play">
+      <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
+      <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
+      <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25">
+        <h2 class="dn"><a href="#demos">Demos</a></h2>
+        <ol data-section="scenes" class="list f0 h-100">
+          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" class="dib vw-25 h-100" id="a_painter">
+            <label class="db w-100 h-100">
+              <input type="radio" name="scene" class="focusable-radio o-50 h0 w0 dn" value="a_painter">
+              <div itemprop="details" class="demo-details f5 h-100">
+                <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
+                  <span itemprop="name" class="db demo-name truncate">A-Painter</span>
+                </a>
+                <span itemprop="description" class="dn">Paint and sketch in VR by Mozilla A-Frame team</span>
+              </div>
+            </label>
+          </li>
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" class="dib vw-25 h-100" id="a_saturday_night">
+            <label class="db w-100 h-100">
+              <input type="radio" name="scene" class="focusable-radio o-50 h0 w0 dn" value="a_saturday_night">
+              <div itemprop="details" class="demo-details f5 h-100">
+                <a itemprop="url" href="https://aframe.io/a-saturday-night/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_saturday_night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
+                  <span itemprop="name" class="db demo-name truncate">A Saturday Night A Saturday Night</span>
+                </a>
+                <span itemprop="description" class="dn">Record and share your dance moves</span>
+              </div>
+            </label>
+          </li>
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" class="dib vw-25 h-100" id="puzzle_rain">
+            <label class="db w-100 h-100">
+              <input type="radio" name="scene" class="focusable-radio o-50 h0 w0 dn" value="puzzle_rain">
+              <div itemprop="details" class="demo-details f5 h-100">
+                <a itemprop="url" href="https://mozvr.com/puzzle-rain/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle_rain/poster.png); background-size: cover"></div>
+                  <span itemprop="name" class="db demo-name truncate">Puzzle Rain</span>
+                </a>
+                <span itemprop="description" class="dn">A musical WebVR journey for the HTC VIVE</span>
+              </div>
+            </label>
+          </li>
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" class="dib vw-25 h-100" id="a_blast">
+            <label class="db w-100 h-100">
+              <input type="radio" name="scene" class="focusable-radio o-50 h0 w0 dn" value="a_blast">
+              <div itemprop="details" class="demo-details f5 h-100">
+                <a itemprop="url" href="https://aframe.io/a-blast/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_blast/poster.png); background-size: cover"></div>
+                  <span itemprop="name" class="db demo-name truncate">A-Blast</span>
+                </a>
+                <span itemprop="description" class="dn">Save the world from the cutest creatures in the universe</span>
+              </div>
+            </label>
+          </li>
+        </ol>
+        <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
+      </form>
+    </section>
+    <section id="profile" data-page="profile">
+      <h2 class="a11y-green bb f2 vw-25 pb4 lh-solid" data-l10n-id="system_profile">System Profile</h2>
+      <dl class="lh-copy f5 fw3 pt5">
+        <dt class="o-60" data-l10n-id="os">Operating System</dt>
+        <dd class="f2 fw4 flex-l">
+          <div id="os_value" data-l10n-id="os_value" data-l10n-args='{"name": "", "version": ""}' class="w-100 w-40-l flex-auto-l">
+            <span data-l10n-id="detecting">Detecting &hellip;</span>
+          </div>
+          <div id="os_compat_value" class="compat-card w-70 w-40-l dib-l bg-a11y-green ba b--white-20 f7 lh-solid flex-auto-ns white br2">
+            <span class="fw5" data-l10n-id="detecting">Detecting &hellip;</span>
+          </div>
+        </dd>
+        <dt class="o-60 pt3 pt5-ns" data-l10n-id="browser">Browser</dt>
+        <dd class="f2 fw4" id="browser_value" data-l10n-id="browser_value" data-l10n-args='{"name": "", "version": ""}'>
+          <span data-l10n-id="detecting">Detecting &hellip;</span>
+        </dd>
+        <dt class="o-60 pt3 pt5-ns" data-l10n-id="device">Device</dt>
+        <dd class="f2 fw4" id="device_value" data-l10n-id="device_value" data-l10n-args='{"vendor": "", "model": "", "type": ""}'>
+          <span data-l10n-id="detecting">Detecting &hellip;</span>
+        </dd>
+        <dt class="o-60 pt3 pt5-ns" data-l10n-id="cpu">CPU</dt>
+        <dd class="f2 fw4" id="cpu_value" data-l10n-id="cpu_value" data-l10n-args='{"architecture": "Unknown"}'>
+          <span data-l10n-id="detecting">Detecting &hellip;</span>
+        </dd>
+        <dt class="o-60 pt3 pt5-ns" data-l10n-id="vrdisplays">VR Displays</dt>
+        <dd class="f2 fw4" id="vrdisplays_value">
+          <span data-l10n-id="detecting">Detecting &hellip;</span>
+        </dd>
+      </dl>
+    </section>
+    <!-- <script src="assets/js/ga.js" async defer></script> -->
+    <script src="assets/js/ua-parser.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

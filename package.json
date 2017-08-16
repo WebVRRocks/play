@@ -1,0 +1,33 @@
+{
+  "name": "webvrrocks.play",
+  "description": "A kiosk for launching and testing WebVR scenes.",
+  "author": "WebVR Rocks authors",
+  "version": "0.1.0",
+  "license": "CC0-1.0",
+  "repository": "webvrrocks/play",
+  "homepage": "https://github.com/webvrrocks/play",
+  "bugs": "https://github.com/webvrrocks/play/issues",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "cross-env NODE_ENV='development' node ./scripts/dev.js",
+    "prod": "cross-env NODE_ENV='production' http-server -c-1",
+    "lint": "semistandard -v | snazzy",
+    "lint-fix": "semistandard --fix",
+    "build": "node ./scripts/build.js",
+    "preprod": "npm run build",
+    "release": "npm version patch --minor && npm publish && git push --follow-tags && git push",
+    "predeploy": "npm run build",
+    "deploy": "ghpages webvrrocks/play"
+  },
+  "dependencies": {
+    "cross-env": "^5.0.1",
+    "http-server": "^0.10.0"
+  },
+  "devDependencies": {
+    "ghpages": "0.0.10",
+    "live-server": "^1.2.0",
+    "semistandard": "^11.0.0",
+    "shelljs": "^0.7.8",
+    "snazzy": "^7.0.0"
+  }
+}
