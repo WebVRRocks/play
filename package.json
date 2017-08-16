@@ -17,7 +17,7 @@
     "preprod": "npm run build",
     "release": "npm version patch --minor && npm publish && git push --follow-tags && git push",
     "predeploy": "npm run build",
-    "deploy": "ghpages cvan/play"
+    "deploy": "ghpages webvrrocks/play"
   },
   "dependencies": {
     "cross-env": "^5.0.1",
