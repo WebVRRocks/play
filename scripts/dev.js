@@ -31,6 +31,7 @@ liveServer.start({
         const spaRoutesKeys = Object.keys(spaRoutes);
         for (let idx = 0; idx < spaRoutesKeys.length; idx++) {
           let route = spaRoutesKeys[idx];
+          console.log('route, ', route, path);
           if (route !== '/' && path === route) {
             redirectPath = spaRoutes[route];
             break;

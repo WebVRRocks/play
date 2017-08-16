@@ -31,7 +31,7 @@ device_value_type_desktop = <strong data-device-type="desktop">Desktop</strong>
 device_value_type_tablet = <strong data-device-type="desktop">Tablet</strong>
 device_value_type_mobile = <strong data-device-type="mobile">Mobile</strong>
 
-cpu = CPU
+cpu = <abbr title="Central Processing Unit">CPU</abbr>
 cpu_value = <strong data-cpu-architecture="{ $architecture }">{ $architecture }</strong>
 cpu_value_32_bit = <strong data-cpu-architecture="32-bit">32-bit</strong>
 cpu_value_64_bit = <strong data-cpu-architecture="64-bit">64-bit</strong>
@@ -55,3 +55,8 @@ ios = iOS
 desktop = desktop
 mobile = mobile
 tablet = tablet
+
+available = Not available
+not_available = Not available
+
+select_scene = Select scene
