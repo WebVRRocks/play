@@ -52,58 +52,6 @@ h6 {
   text-indent: -200%;
 }
 
-.scene-img {
-  background-color: #eee;
-  background-position: 50% 50%;
-  background-size: cover;
-  height: 100%;
-  width: 100%;
-}
-
-.scene-radio {
-  left: .5rem;
-  opacity: 0;
-  position: relative;
-  top: .5rem;
-}
-
-.scene-radio:not(:checked) ~ *,
-.scene-link ~ * {
-  opacity: .3;
-}
-
-.scene-link:hover,
-.scene-link:hover ~ * {
-  opacity: 1;
-}
-
-.scene-radio:checked + .scene-link .scene-link-inner,
-.scene-link:hover .scene-link-inner {
-  box-shadow: inset 0 0 .5px rgba(0,0,0,.15), 0 0 0 4px rgba(0,0,0,.05), 0 0 0 1px rgba(0,0,0,.05);
-}
-
-.visually-hidden {
-  /*
-  left: -100%;
-  opacity: .5;
-  position: absolute;
-  position: relative;
-  visibility: hidden;
-  */
-}
-
-input:checked ~ a .glow,
-input:checked ~ a .glow:focus,
-input:checked ~ a .glow:hover {
-  -webkit-transition: opacity .15s ease-in;
-  transition: opacity .15s ease-in;
-}
-
-input:checked ~ a .glow:focus,
-input:checked ~ a .glow:hover {
-  opacity: 1;
-}
-
 .hide-child .child {
   opacity: 1;
   -webkit-transition: opacity .15s ease-in;
@@ -130,20 +78,6 @@ input:checked ~ a .glow:hover {
   opacity: 0;
   -webkit-transition: opacity .15s ease-in;
   transition: opacity .15s ease-in;
-}
-
-.form-label[data-platform] {
-  padding-top: 1.5rem;
-}
-
-.form-label[data-platform]:before {
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  content: "";
-  display: block;
-  height: 30px;
-  width: 100%;
 }
 
 .form-label[data-platform~="htc_vive"]:before {
@@ -203,14 +137,24 @@ input:checked ~ a .glow:hover {
   display: none;
 }
 
-html:not([data-path]) [data-page~="play"],
-html[data-path="/"] [data-page~="play"],
-html[data-path^="/play"] [data-page~="play"] {
+html[data-layout~="play"] [data-page~="play"],
+html[data-layout~="profile"] [data-page~="profile"] {
   display: block;
 }
 
-html[data-path^="/profile"] [data-page~="profile"] {
-  display: block;
+.scene[data-state~="pending"] {
+  opacity: 0;
+  transition: .5s opacity ease-in;
+}
+
+.scene[data-state~="loaded"] {
+  opacity: 1;
+}
+
+html[data-layout~="play"],
+html[data-layout~="play"] body {
+  height: 100%;
+  width: 100%;
 }
 
 [data-l10n-id="detecting"] {
@@ -219,9 +163,6 @@ html[data-path^="/profile"] [data-page~="profile"] {
 
 [data-l10n-id$="_unknown"] * {
   opacity: .7;
-}
-
-.compat-card {
 }
 
 .compat-card [data-l10n-id$="_experimental"] {
@@ -253,4 +194,58 @@ html[data-path^="/profile"] [data-page~="profile"] {
   color: #eee;
   opacity: .7;
   padding: .75rem .5rem;
+}
+
+[itemprop="details"] {
+  padding-top: 2vh;
+}
+
+[itemprop="image"] {
+  background-repeat: no-repeat;
+  display: block;
+  height: 14vh;
+  width: 100%;
+}
+
+[data-slug="a_painter"] [itemprop="image"] {
+  background-size: fill;
+  background-position: 50%;
+}
+
+[data-slug="puzzle_rain"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="a_blast"] [itemprop="image"] {
+  background-size: contain;
+}
+
+[data-slug="puzzle_rain"] a:hover [itemprop="image"] {
+  background-image: url(../img/scenes/puzzle_rain/puzzle-rain-animated-preview-spectator.gif) !important;
+}
+
+.focusable-radio:focus ~ [itemprop="details"] [itemprop="image"],
+.focusable-radio:checked ~ [itemprop="details"] [itemprop="image"],
+.focusable-link:hover [itemprop="image"] {
+  box-shadow: 0 0 10px 5px rgba(255,255,255,.1);
+}
+
+.focusable-radio:focus ~ [itemprop="details"] [itemprop="url"],
+.focusable-radio:checked ~ [itemprop="details"] [itemprop="url"] {
+  opacity: 1;
+}
+
+[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"] {
+  opacity: .5;
+  transition: .15s opacity ease-in-out;
+}
+
+[data-form="scenes"][data-scene] .focusable-radio:checked ~ [itemprop="details"] {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.focusable-link:focus {
+  -moz-outline-style: none;
+  outline: 0;
 }
