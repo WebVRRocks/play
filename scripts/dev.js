@@ -15,10 +15,10 @@ liveServer.start({
   logLevel: 2,  // 0 = errors only; 1 = some errors; 2 = many errors.
   middleware: [
     function (req, res, next) {
-      var path = urlParse(req.url).pathname;
+      var pathname = urlParse(req.url).pathname;
 
       // Handle redirects for URLs with trailing slashes.
-      if (path.endsWith('.html') || (path !== '/' && path.endsWith('/'))) {
+      if (pathname.endsWith('.html') || (path !== '/' && pathname.endsWith('/'))) {
         res.statusCode = 302;
         res.setHeader('Location', req.url.replace(/\/+$/, '').replace(/.html$/, ''));
         res.setHeader('Content-Length', '0');
@@ -26,12 +26,18 @@ liveServer.start({
         return;
       }
 
-      if (path !== '/' && !path.startsWith('/assets')) {
+      const pathnameHasPin = /^\/[0-9]+$/.test(pathname);
+      if (pathnameHasPin) {
+        req.url = '/';
+        next();
+        return;
+      }
+
+      if (path !== '/' && !pathname.startsWith('/assets')) {
         let redirectPath = '/404.html';
         const spaRoutesKeys = Object.keys(spaRoutes);
         for (let idx = 0; idx < spaRoutesKeys.length; idx++) {
           let route = spaRoutesKeys[idx];
-          console.log('route, ', route, path);
           if (route !== '/' && path === route) {
             redirectPath = spaRoutes[route];
             break;
@@ -39,6 +45,7 @@ liveServer.start({
         }
         req.url = redirectPath;
       }
+
       next();
     }
   ]

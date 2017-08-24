@@ -260,11 +260,15 @@
 
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
     pageTitles['/'] = titleEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-path="/play"] [data-slug="play"] { opacity: 1; }';
+    cssDynamicRulesEl.cssText += 'html[data-layout~="play"] [data-slug="play"] { opacity: 1; }';
 
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
     pageTitles['/profile'] = profileHeadingEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-path="/profile"] [data-slug="profile"] { opacity: 1; }';
+    cssDynamicRulesEl.cssText += 'html[data-layout~="profile"] [data-slug="profile"] { opacity: 1; }';
+
+    var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
+    pageTitles['/poyfill_v2'] = polyfillV2HeadingEl.textContent;
+    cssDynamicRulesEl.cssText += 'html[data-layout~="polyfill_v2"] [data-slug="profile"] { opacity: 1; }';
 
     var redirectPath = null;
     try {
@@ -285,6 +289,34 @@
     parseProfile();
 
     renderProfile();
+
+    var pathname = window.location.pathname;
+    var pathnameHasPin = /^\/[0-9]+$/.test(pathname);
+    if (pathnameHasPin) {
+      var remoteEl = document.getElementById('remote');
+      if (remoteEl) {
+        remoteEl.src = remoteEl.getAttribute('data-base-url').replace(/\/+$/g, '') + pathname;
+      }
+    }
+
+    window.addEventListener('message', function (evt) {
+      console.log('Received postMessage:', evt.data);
+      if (evt.data === 'right') {
+        console.log('go right');
+        var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
+        if (selectedSceneEl) {
+          var nextSceneEl = selectedSceneEl.closest('[itemprop="scene"] + [itemprop="scene"]');
+          console.log(nextSceneEl);
+          if (nextSceneEl) {
+            selectedSceneEl.checked = false;
+            nextSceneEl.checked = true;
+          }
+        } else {
+          var nextSceneEl = document.querySelector('input[name="scene"]');
+          nextSceneEl.checked = true;
+        }
+      }
+    });
 
     var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
@@ -348,6 +380,8 @@
 
     if (path === '/profile') {
       document.documentElement.setAttribute('data-layout', 'profile');
+    } else if (path.indexOf('/polyfill') === 0) {
+      document.documentElement.setAttribute('data-layout', 'polyfill');
     } else {
       document.documentElement.setAttribute('data-layout', 'play');
     }
