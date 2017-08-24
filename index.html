@@ -1,24 +1,32 @@
 <!doctype html>
-<html data-path="/play" data-layout="play">
+<html data-root-path="/"
+      data-remote-socket-path="https://remote.webvr.rocks/socketpeer/"
+      data-path="/play"
+      data-layout="play">
   <head>
     <base href="/">
     <meta charset="utf-8">
+    <!-- Origin Trial Token, feature = WebVR (For Chrome M59+), origin = https://ngrok.io, expires = 2017-09-21 -->
+    <meta http-equiv="origin-trial" data-feature="WebVR (For Chrome M59+)" data-expires="2017-09-21" content="AvRVCddb27Bor+JGrb3uWtYIR8qPZzh6zPQ2MC+RXTF4RntkeWrkzIGnj8vyfDJMaCwC8QefC1fKPcg4a+hWegYAAABKeyJvcmlnaW4iOiJodHRwczovL25ncm9rLmlvOjQ0MyIsImZlYXR1cmUiOiJXZWJWUjEuMSIsImV4cGlyeSI6MTUwNTk1ODIxM30=">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-l10n-id="title_default">Play WebVR • Explore Virtual Reality on the Web</title>
     <link rel="stylesheet" href="assets/css/tachyons-custom.css">
     <link rel="stylesheet" href="assets/css/tachyons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <meta name="theme-color" content="#24aef4">
-    <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" sizes="256x256" href="assets/img/icon-256.png">
     <link rel="icon" sizes="256x256" href="assets/img/icon-256.svg">
     <link rel="mask-icon" href="/rocks/mask-84.svg" color="#24aef4">
-    <!-- Origin Trial Token, feature = WebVR (For Chrome M59+), origin = https://ngrok.io, expires = 2017-09-21 -->
-    <meta http-equiv="origin-trial" data-feature="WebVR (For Chrome M59+)" data-expires="2017-09-21" content="AvRVCddb27Bor+JGrb3uWtYIR8qPZzh6zPQ2MC+RXTF4RntkeWrkzIGnj8vyfDJMaCwC8QefC1fKPcg4a+hWegYAAABKeyJvcmlnaW4iOiJodHRwczovL25ncm9rLmlvOjQ0MyIsImZlYXR1cmUiOiJXZWJWUjEuMSIsImV4cGlyeSI6MTUwNTk1ODIxM30=">
+    <link rel="manifest" href="manifest.webmanifest">
     <meta name="defaultLanguage" content="en-US">
     <meta name="availableLanguages" content="en-US">
     <link rel="localization" href="assets/locales/{locale}.ftl">
     <script src="assets/js/l20n.js" defer></script>
+    <script src="assets/js/ga.js" async defer></script>
+    <script src="assets/js/ua-parser.min.js" async defer></script>
+    <script src="assets/js/main.js" async defer></script>
+    <script src="https://remote.webvr.rocks/socketpeer/socketpeer.js" async defer data-requires-online="true"></script>
+    <script src="assets/js/remote.js" async defer data-requires-online="true"></script>
     <style id="css-dynamic-rules"></style>
   </head>
   <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
@@ -112,9 +120,7 @@
       </dl>
     </section>
     <section id="polyfill_v2" data-page="polyfill_v2">
+      <h2 class="a11y-green bb f2 vw-25 pb4 lh-solid" data-l10n-id="polyfill_v2">WebVR API v2 Polyfill</h2>
     </section>
-    <!-- <script src="assets/js/ga.js" async defer></script> -->
-    <script src="assets/js/ua-parser.min.js"></script>
-    <script src="assets/js/main.js"></script>
   </body>
 </html>

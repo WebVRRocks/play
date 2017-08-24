@@ -1,11 +1,22 @@
-/* global ga, UAParser */
+/* global ga, UAParser, URLSearchParams */
 (function () {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js',).then(function (reg) {
-      console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
-    }).catch(function (err) {
-      console.log('Service Worker registration failed:', err);
-    });
+  var rootPath = '/';
+  try {
+    rootPath = document.documentElement.getAttribute('data-root') || rootPath;
+  } catch (err) {
+  }
+
+  // Register a Service Worker, if supported by the browser.
+  if ('URLSearchParams' in window) {
+    var qs = new URLSearchParams(window.location.search.substr(1));
+    var swEnabled = qs.get('sw') !== '0';
+    if (swEnabled && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register(rootPath + 'sw.js').then(function (reg) {
+        console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
+      }).catch(function (err) {
+        console.error('Service Worker registration failed:', err);
+      });
+    }
   }
 
   // Adapted from source: https://github.com/feross/arch/blob/master/browser.js
@@ -221,16 +232,16 @@
     }
   }
 
+  var pageTitles = {};
+  var startUrls = {};
+
   function getPath (href) {
     var pathname = href || window.location.pathname;
-    if (pathname === '/' || pathname === '/index' || pathname === '/index.html') {
-      return '/';
+    if (pathname === rootPath || pathname === '/' || pathname === '/index' || pathname === '/index.html') {
+      return rootPath;
     }
     return pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
   }
-
-  var pageTitles = {};
-  var startUrls = {};
 
   var sceneEl = document.querySelector('#scene');
   if (sceneEl) {
@@ -238,36 +249,39 @@
   }
 
   window.addEventListener('load', function () {
-    sceneEl = document.querySelector('#scene');
+    rootPath = document.documentElement.getAttribute('data-root') || rootPath;
+
+    sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
     sceneEl.setAttribute('data-state', 'pending');
     setTimeout(function () {
       sceneEl.setAttribute('data-state', 'loaded');
     }, 2000);
-    sceneEl.addEventListener('load', function () {
-      sceneEl.setAttribute('data-state', 'loaded');
-    });
+    // TODO: Fix this such that the child `<iframe>` sends a `postMessage` event to this parent window.
+    // sceneEl.addEventListener('load', function () {
+    //   sceneEl.setAttribute('data-state', 'loaded');
+    // });
 
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-slug]'), function (sceneItemEl) {
       var slug = sceneItemEl.getAttribute('data-slug');
-      pageTitles['/' + slug] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
-      startUrls['/' + slug] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
+      pageTitles[rootPath + slug] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
+      startUrls[rootPath + slug] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
       cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-page~="play"] { display: block; }';
       cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] { box-shadow: 0 0 10px rgba(255,255,255,.5); opacity: 1; }';
     });
 
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
-    pageTitles['/'] = titleEl.textContent;
+    pageTitles[rootPath] = titleEl.textContent;
     cssDynamicRulesEl.cssText += 'html[data-layout~="play"] [data-slug="play"] { opacity: 1; }';
 
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
-    pageTitles['/profile'] = profileHeadingEl.textContent;
+    pageTitles[rootPath + 'profile'] = profileHeadingEl.textContent;
     cssDynamicRulesEl.cssText += 'html[data-layout~="profile"] [data-slug="profile"] { opacity: 1; }';
 
     var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
-    pageTitles['/poyfill_v2'] = polyfillV2HeadingEl.textContent;
+    pageTitles[rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
     cssDynamicRulesEl.cssText += 'html[data-layout~="polyfill_v2"] [data-slug="profile"] { opacity: 1; }';
 
     var redirectPath = null;
@@ -353,7 +367,7 @@
 
       scenesFormEl.setAttribute('data-scene', slug);
 
-      var pageUrl = '/' + slug;
+      var pageUrl = rootPath + slug;
       routeUpdate(pageUrl, true, {slug: slug});
     });
 
@@ -366,7 +380,7 @@
         if (selectedSceneEl) {
           var slug = selectedSceneEl.value;
 
-          var pageUrl = '/' + slug;
+          var pageUrl = rootPath + slug;
           routeUpdate(pageUrl, true, {slug: slug});
 
           scenesFormEl.setAttribute('data-scene', slug);
@@ -378,9 +392,9 @@
   function routeUpdate (href, push, data) {
     var path = getPath(href);
 
-    if (path === '/profile') {
+    if (path === rootPath + 'profile') {
       document.documentElement.setAttribute('data-layout', 'profile');
-    } else if (path.indexOf('/polyfill') === 0) {
+    } else if (path.indexOf(rootPath + 'polyfill') === 0) {
       document.documentElement.setAttribute('data-layout', 'polyfill');
     } else {
       document.documentElement.setAttribute('data-layout', 'play');
@@ -394,7 +408,7 @@
     var titleEl = document.querySelector('title');
     var title = pageTitles[path];
 
-    if (path !== '/' && title) {
+    if (path !== rootPath && title) {
       titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
       titleEl.setAttribute('data-l10n-id', 'title_page');
     } else {
@@ -406,6 +420,7 @@
       sceneEl.setAttribute('src', startUrls[path]);
     }
 
+    // TODO: Handle `popState` navigation.
     if (push !== false) {
       var state = {};
       state.path = path;

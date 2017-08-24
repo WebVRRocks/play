@@ -60,3 +60,5 @@ available = Not available
 not_available = Not available
 
 select_scene = Select scene
+
+polyfill_v2 = WebVR API v2 Polyfill
