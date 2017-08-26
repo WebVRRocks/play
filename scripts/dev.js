@@ -18,50 +18,16 @@ liveServer.start({
       const urlParsed = urlParse(req.url);
       const pathname = urlParsed.pathname;
       const qs = urlParsed.search;
-      const urlClean = req.url.replace(/\/+$/, '').replace(/.html$/, '');
-
-      // TODO: Fix infinite-redirect bug with query-string parameters (e.g., `?sw=0`).
-      if (urlClean === '/' && qs) {
-        req.url = urlClean;
-        next();
-        return;
-      }
-
-      // Handle redirects for URLs with trailing slashes.
-      if (pathname.endsWith('.html') || (path !== '/' && pathname.endsWith('/'))) {
-        res.statusCode = 302;
-        res.setHeader('Location', urlClean);
-        res.setHeader('Content-Length', '0');
-        next();
-        return;
-      }
+      const pathnameClean = pathname.replace(/\/+/g, '/').replace(/\/index.html$/i, '');
 
       const pathnameHasPin = /^\/[0-9]+$/.test(pathname);
-      if (pathnameHasPin) {
-        req.url = '/';
-        next();
-        return;
-      }
 
-      if (path !== '/' &&
-          !pathname.startsWith('/assets') &&
-          !pathname.endsWith('.js') &&
-          !pathname.endsWith('.ico') &&
-          !pathname.endsWith('.css') &&
-          !pathname.endsWith('.md') &&
-          !pathname.endsWith('.webmanifest') &&
-          !pathname.endsWith('.manifest') &&
-          !pathname.endsWith('.json')) {
-        let redirectPath = '/404.html';
-        const spaRoutesKeys = Object.keys(spaRoutes);
-        for (let idx = 0; idx < spaRoutesKeys.length; idx++) {
-          let route = spaRoutesKeys[idx];
-          if (route !== '/' && path === route) {
-            redirectPath = spaRoutes[route];
-            break;
-          }
-        }
-        req.url = redirectPath;
+      if (pathnameClean === '/' || pathnameHasPin || spaRoutes[pathnameClean] === '/') {
+        req.url = '/';
+      } else if (pathname !== pathnameClean) {
+        res.statusCode = 302;
+        res.setHeader('Location', pathnameClean);
+        res.setHeader('Content-Length', '0');
       }
 
       next();

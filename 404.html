@@ -20,10 +20,11 @@
         var redirects = {
         };
 
-        var path = window.location.pathname.toLowerCase().replace(/\/+$/g, '');
+        var pathname = window.location.pathname;
+        var pathnameClean = pathname.replace(/\/+/g, '/').replace(/\/index.html$/i, '');
 
-        if (endsWith(path, '.html')) {
-          window.location.href = path.replace(/.html/i, '');
+        if (pathname !== pathnameClean) {
+          window.location.href = pathnameClean;
           return;
         }
 
@@ -31,13 +32,13 @@
         var redirectsKeys = Object.keys(redirects);
         for (var idx = 0; idx < redirectsKeys.length; idx++) {
           route = redirectsKeys[idx];
-          if (path.indexOf(route.toLowerCase()) > -1) {
+          if (pathname.indexOf(route.toLowerCase()) > -1) {
             window.location.href = redirects[route];
             return;
           }
         }
 
-        if (path in routes) {
+        if (pathname in routes) {
           try {
             window.sessionStorage.redirect = window.location.href;
           } catch (err) {

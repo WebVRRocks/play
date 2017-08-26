@@ -9,7 +9,7 @@
   "bugs": "https://github.com/webvrrocks/play/issues",
   "scripts": {
     "start": "npm run dev",
-    "dev": "cross-env NODE_ENV='development' node ./scripts/dev.js",
+    "dev": "cross-env NODE_ENV='development' nodemon ./scripts/dev.js",
     "prod": "cross-env NODE_ENV='production' http-server -c-1",
     "lint": "semistandard -v | snazzy",
     "lint-fix": "semistandard --fix",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "ghpages": "0.0.10",
     "live-server": "^1.2.0",
+    "nodemon": "^1.11.0",
     "semistandard": "^11.0.0",
     "shelljs": "^0.7.8",
     "snazzy": "^7.0.0"
