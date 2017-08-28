@@ -240,7 +240,7 @@
     if (pathname === rootPath || pathname === '/' || pathname === '/index' || pathname === '/index.html') {
       return rootPath;
     }
-    return pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
+    return pathname.replace(/\.html$/i, '').replace(/\/+/g, '/');
   }
 
   var sceneEl = document.querySelector('#scene');
@@ -303,15 +303,6 @@
     parseProfile();
 
     renderProfile();
-
-    var pathname = window.location.pathname;
-    var pathnameHasPin = /^\/[0-9]+$/.test(pathname);
-    if (pathnameHasPin) {
-      var remoteEl = document.getElementById('remote');
-      if (remoteEl) {
-        remoteEl.src = remoteEl.getAttribute('data-base-url').replace(/\/+$/g, '') + pathname;
-      }
-    }
 
     window.addEventListener('message', function (evt) {
       console.log('Received postMessage:', evt.data);
