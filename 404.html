@@ -8,42 +8,11 @@
     <meta name="robots" content="none">
     <script>
       (function () {
-        function endsWith (str) {
-          if (String.prototype.endsWith) {
-            return String.prototype.endsWith.call(str);
-          }
-          return str.lastIndexOf('g', str.length - 1) === str.length - 1;
-        }
-
-        var routes = {
-        };
-        var redirects = {
-        };
-
         var pathname = window.location.pathname;
-        var pathnameClean = pathname.replace(/\/+/g, '/').replace(/\/index.html$/i, '');
+        var pathnameClean = pathname.replace(/\.html$/i, '').replace(/\/+/g, '/');
 
         if (pathname !== pathnameClean) {
           window.location.href = pathnameClean;
-          return;
-        }
-
-        var route;
-        var redirectsKeys = Object.keys(redirects);
-        for (var idx = 0; idx < redirectsKeys.length; idx++) {
-          route = redirectsKeys[idx];
-          if (pathname.indexOf(route.toLowerCase()) > -1) {
-            window.location.href = redirects[route];
-            return;
-          }
-        }
-
-        if (pathname in routes) {
-          try {
-            window.sessionStorage.redirect = window.location.href;
-          } catch (err) {
-          }
-          window.location.href = routes[path];
           return;
         }
       })();
