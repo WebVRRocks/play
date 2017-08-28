@@ -1,6 +1,7 @@
 <!doctype html>
+<!-- data-remote-socket-path="https://remote.webvr.rocks/socketpeer/" -->
 <html data-root-path="/"
-      data-remote-socket-path="https://remote.webvr.rocks/socketpeer/"
+      data-remote-socket-path="http://0.0.0.0:3000/socketpeer/"
       data-path="/play"
       data-layout="play">
   <head>
@@ -25,14 +26,12 @@
     <script src="assets/js/ga.js" async defer></script>
     <script src="assets/js/ua-parser.min.js" async defer></script>
     <script src="assets/js/main.js" async defer></script>
-    <script src="https://remote.webvr.rocks/socketpeer/socketpeer.js" async defer data-requires-online="true"></script>
     <script src="assets/js/remote.js" async defer data-requires-online="true"></script>
     <style id="css-dynamic-rules"></style>
   </head>
   <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
     <section id="play" data-page="play">
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
-      <iframe id="remote" data-base-url="http://0.0.0.0:3000/" src="" class="bw0 o-50 absolute bottom-0 w-100 h-25"></iframe>
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
       <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25">
         <h2 class="dn"><a href="#demos">Demos</a></h2>
@@ -89,6 +88,7 @@
         <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
       </form>
     </section>
+    <div id="remote" class="remote w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></div>
     <section id="profile" data-page="profile">
       <h2 class="a11y-green bb f2 vw-25 pb4 lh-solid" data-l10n-id="system_profile">System Profile</h2>
       <dl class="lh-copy f5 fw3 pt5">
