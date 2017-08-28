@@ -353,7 +353,7 @@
       var newSelectedSceneEl = sceneItemEl.querySelector('input[name="scene"]');
       if (newSelectedSceneEl) {
         newSelectedSceneEl.checked = true;
-        newSelectedSceneEl.focus();
+        // newSelectedSceneEl.focus();
       }
 
       scenesFormEl.setAttribute('data-scene', slug);

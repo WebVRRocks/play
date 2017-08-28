@@ -1,8 +1,9 @@
-/* global ga, SocketPeer */
+/* global ga, SocketPeer, SpatialNavigation */
 (function () {
   var rootPath = '/';
   // var remoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
   var remoteSocketPath = 'http://0.0.0.0:3000/socketpeer/';
+  var spatialNavigationPath = 'assets/js/spatial_navigation.js';
 
   var remoteEl = document.querySelector('#remote');
   if (remoteEl) {
@@ -10,32 +11,42 @@
   }
 
   function Dependencies () {
-    this.dependencies = {};
+    this.scripts = {};
   }
   Dependencies.prototype.require = function (src, cb) {
     var self = this;
     if (self.hasLoaded(src)) {
-      return self.dependencies[src];
+      if (cb) {
+        return true;
+      } else {
+        cb(null, true);
+      }
     }
 
     var script = document.createElement('script');
     script.src = src;
     script.async = script.defer = true;
 
-    self.dependencies[src] = null;
+    self.scripts[src] = null;
 
     script.addEventListener('load', function () {
-      self.dependencies[src] = true;
+      self.scripts[src] = true;
+      if (cb) {
+        cb(null, true);
+      }
     });
 
     script.addEventListener('error', function (err) {
-      self.dependencies[src] = err;
+      self.scripts[src] = err;
+      if (cb) {
+        cb(err);
+      }
     });
 
     document.head.appendChild(script);
   };
   Dependencies.prototype.hasLoaded = function (src) {
-    return src in this.dependencies;
+    return this.scripts[src] === true;
   };
 
   var dependencies = new Dependencies();
@@ -101,11 +112,33 @@
       return null;
     }
 
+    function initSpatialNavigation () {
+      if (initSpatialNavigation.called) {
+        return;
+      }
+
+      initSpatialNavigation.called = true;
+
+      dependencies.require(rootPath + spatialNavigationPath, function () {
+        SpatialNavigation.init();
+
+        SpatialNavigation.add({
+          id: 'scenes-form',
+          selector: '.focusable-radio'
+        });
+
+        SpatialNavigation.makeFocusable();
+
+        SpatialNavigation.focus();
+      });
+    }
+
     window.addEventListener('hashchange', function () {
       handleCurrentPin();
     });
 
     handleCurrentPin();
+    initSpatialNavigation();
 
     var peerConnectBtnEl = document.querySelector('#peer-connect-btn');
     if (peerConnectBtnEl) {
@@ -119,6 +152,7 @@
     function peerConnect (code, cb) {
       return dependencies.require(remoteSocketPath + 'socketpeer.js', function () {
         _peerConnect(cb);
+        initSpatialNavigation();
       });
 
       function _peerConnect (cb) {
@@ -155,8 +189,11 @@
         }
 
         peer.on('data', function (data) {
-          window.top.postMessage(data, '*');
-          log('<them> ' + data);
+          log('received data: ' + data);
+
+          if (data) {
+            SpatialNavigation.move(data);
+          }
         });
 
         peer.on('upgrade', function () {
