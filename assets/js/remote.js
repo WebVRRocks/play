@@ -1,8 +1,7 @@
 /* global ga, SocketPeer, SpatialNavigation */
 (function () {
   var rootPath = '/';
-  // var remoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
-  var remoteSocketPath = 'http://0.0.0.0:3000/socketpeer/';
+  var remoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
   var spatialNavigationPath = 'assets/js/spatial_navigation.js';
 
   var remoteEl = document.querySelector('#remote');
@@ -106,6 +105,10 @@
       }
 
       if (code) {
+        try {
+          window.localStorage.remote_code = code;
+        } catch (err) {
+        }
         return peerConnect(code);
       }
 
@@ -120,6 +123,27 @@
       initSpatialNavigation.called = true;
 
       dependencies.require(rootPath + spatialNavigationPath, function () {
+        var scenesFormEl = document.querySelector('[data-form="scenes"]');
+
+        if (scenesFormEl) {
+          var sceneEls = scenesFormEl.querySelectorAll('[itemprop="scene"] input[name="scene"]');
+          var firstSceneRadioEl = sceneEls[0];
+          var lastSceneRadioEl = sceneEls[sceneEls.length - 1];
+          if (firstSceneRadioEl && lastSceneRadioEl) {
+            var lastSceneSelector = 'input[name="scene"][value="' + lastSceneRadioEl.value + '"]';
+            // var lastSceneSelector = '#' + lastSceneRadioEl.id;
+
+            firstSceneRadioEl.setAttribute('data-sn-left', lastSceneSelector);
+            firstSceneRadioEl.setAttribute('data-sn-up', lastSceneSelector);
+
+            var firstSceneSelector = 'input[name="scene"][value="' + firstSceneRadioEl.value + '"]';
+            // var firstSceneSelector = '#' + firstSceneRadioEl.id;
+
+            lastSceneRadioEl.setAttribute('data-sn-right', firstSceneSelector);
+            lastSceneRadioEl.setAttribute('data-sn-down', firstSceneSelector);
+          }
+        }
+
         SpatialNavigation.init();
 
         SpatialNavigation.add({
@@ -137,7 +161,12 @@
       handleCurrentPin();
     });
 
-    handleCurrentPin();
+    try {
+      code = window.localStorage.remote_code;
+    } catch (err) {
+    }
+
+    handleCurrentPin(code);
     initSpatialNavigation();
 
     var peerConnectBtnEl = document.querySelector('#peer-connect-btn');
@@ -191,14 +220,32 @@
         peer.on('data', function (data) {
           log('received data: ' + data);
 
-          if (data) {
+          if (data === 'up' || data === 'right' || data === 'down' || data === 'left') {
+            if (data === 'up') {
+              data = 'left';
+            }
+            if (data === 'down') {
+              data = 'right';
+            }
             SpatialNavigation.move(data);
+          } else if (data === 'select') {
+            document.activeElement.click();
+            var urlEl = document.activeElement.closest('li').querySelector('[itemprop="url"]');
+            if (urlEl) {
+              urlEl.click();
+            }
           }
         });
 
         peer.on('upgrade', function () {
           log('upgraded to p2p');
+
           connected = true;
+
+          try {
+            window.localStorage.remote_code = code;
+          } catch (err) {
+          }
         });
 
         peer.on('upgrade_attempt', function () {

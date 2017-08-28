@@ -87,8 +87,6 @@
 
   var supports = {};
 
-  var l10nStrings = {};
-
   function parseProfile () {
     osValueEl = document.querySelector('#os_value');
     browserValueEl = document.querySelector('#browser_value');
@@ -101,8 +99,10 @@
     supports.touch = 'ontouchstart' in window;
     supports.mobile = isMobile();
     supports.tablet = isTablet();
-    supports.webvr = !!navigator.getVRDisplays;
     supports.desktop = !supports.mobile && !supports.tablet;
+
+    supports.webvr = !!navigator.getVRDisplays;
+    supports.webvrPositional = hasPositionalTracking(supports.mobile);
 
     document.documentElement.setAttribute('data-desktop', supports.desktop);
     document.documentElement.setAttribute('data-tablet', supports.tablet);
@@ -174,8 +174,9 @@
     }
 
     if (deviceValueEl) {
+      var deviceStr;
       if (ua.device.vendor || ua.device.model || ua.device.type) {
-        var deviceStr = JSON.stringify(ua.device);
+        deviceStr = JSON.stringify(ua.device);
         deviceValueEl.innerHTML = '&nbsp;';
         deviceValueEl.setAttribute('data-l10n-args', deviceStr);
       } else {
@@ -183,7 +184,7 @@
           ua.device.vendor = 'Apple';
           ua.device.model = 'Mac';
           ua.device.type = 'Intel';
-          var deviceStr = JSON.stringify(ua.device);
+          deviceStr = JSON.stringify(ua.device);
           deviceValueEl.innerHTML = '&nbsp;';
           deviceValueEl.setAttribute('data-l10n-args', deviceStr);
         } else {
@@ -200,8 +201,9 @@
     }
 
     if (cpuValueEl) {
+      var cpuStr;
       if (ua.cpu.architecture) {
-        var cpuStr = JSON.stringify(ua.cpu);
+        cpuStr = JSON.stringify(ua.cpu);
         cpuValueEl.innerHTML = '&nbsp;';
         if (ua.cpu.architecture === 'x64') {
           cpuValueEl.setAttribute('data-l10n-id', 'cpu_value_64_bit');
@@ -262,12 +264,20 @@
     //   sceneEl.setAttribute('data-state', 'loaded');
     // });
 
+    var path = getPath();
+    var routeData = {};
+
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
 
-    Array.prototype.forEach.call(document.querySelectorAll('[data-slug]'), function (sceneItemEl) {
+    Array.prototype.forEach.call(document.querySelectorAll('[itemprop="scene"][data-slug]'), function (sceneItemEl) {
       var slug = sceneItemEl.getAttribute('data-slug');
-      pageTitles[rootPath + slug] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
-      startUrls[rootPath + slug] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
+      var slugPath = rootPath + slug;
+      if (path === slugPath) {
+        routeData.type = 'scene';
+        routeData.slug = slug;
+      }
+      pageTitles[slugPath] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
+      startUrls[slugPath] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
       cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-page~="play"] { display: block; }';
       cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] { box-shadow: 0 0 10px rgba(255,255,255,.5); opacity: 1; }';
     });
@@ -284,48 +294,53 @@
     pageTitles[rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
     cssDynamicRulesEl.cssText += 'html[data-layout~="polyfill_v2"] [data-slug="profile"] { opacity: 1; }';
 
-    var redirectPath = null;
-    try {
-      redirectPath = window.sessionStorage.redirect;
-      delete window.sessionStorage.redirect;
-    } catch (err) {
-    }
-    if (redirectPath) {
-      if (redirectPath in pageTitles && redirectPath !== window.location.href) {
-        history.replaceState(null, null, redirectPath);
-        routeUpdate(redirectPath, false);
+    var scenesFormEl = document.querySelector('[data-form="scenes"]');
+    var scenesEl = document.querySelector('[data-section~="scenes"]');
+
+    function clickSceneEl (elOrSlug, navigate) {
+      var el = elOrSlug;
+      var slug = elOrSlug;
+
+      if (typeof elOrSlug === 'string') {
+        el = scenesFormEl.querySelector('[itemprop="scene"][data-slug="' + elOrSlug + '"]');
       }
-    } else {
-      var path = getPath();
-      routeUpdate(path, false);
+      if (!el) {
+        throw 'An element for slug "' + slug + '" could not be found for `clickSceneEl`';
+      }
+
+      if (typeof slug !== 'string') {
+        slug = el.getAttribute('data-slug');
+      }
+      if (!slug) {
+        throw 'A slug is required for `clickSceneEl`';
+      }
+
+      var selectedSceneEl = scenesFormEl.querySelector('input[name="scene"]:checked');
+      if (selectedSceneEl) {
+        selectedSceneEl.checked = false;
+      }
+
+      var newSelectedSceneEl = el.querySelector('input[name="scene"]');
+      if (newSelectedSceneEl) {
+        newSelectedSceneEl.checked = true;
+      }
+
+      scenesFormEl.setAttribute('data-scene', slug);
+
+      if (navigate) {
+        var pageUrl = rootPath + slug;
+        routeUpdate(pageUrl, true, {type: 'scene', slug: slug});
+      }
+
+      return slug;
     }
+
+    routeUpdate(path, false, routeData);
 
     parseProfile();
 
     renderProfile();
 
-    window.addEventListener('message', function (evt) {
-      console.log('Received postMessage:', evt.data);
-      if (evt.data === 'right') {
-        console.log('go right');
-        var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
-        if (selectedSceneEl) {
-          var nextSceneEl = selectedSceneEl.closest('[itemprop="scene"] + [itemprop="scene"]');
-          console.log(nextSceneEl);
-          if (nextSceneEl) {
-            selectedSceneEl.checked = false;
-            nextSceneEl.checked = true;
-          }
-        } else {
-          var nextSceneEl = document.querySelector('input[name="scene"]');
-          nextSceneEl.checked = true;
-        }
-      }
-    });
-
-    var scenesFormEl = document.querySelector('[data-form="scenes"]');
-
-    var scenesEl = document.querySelector('[data-section~="scenes"]');
     scenesEl.addEventListener('click', function (evt) {
       if (!evt.target.closest || evt.shiftKey || evt.altKey || evt.ctrlKey) {
         return;
@@ -343,115 +358,93 @@
       evt.preventDefault();
       evt.stopPropagation();
 
-      var slug = sceneItemEl.getAttribute('data-slug');
-
-      var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
-      if (selectedSceneEl) {
-        selectedSceneEl.checked = false;
-      }
-
-      var newSelectedSceneEl = sceneItemEl.querySelector('input[name="scene"]');
-      if (newSelectedSceneEl) {
-        newSelectedSceneEl.checked = true;
-        // newSelectedSceneEl.focus();
-      }
-
-      scenesFormEl.setAttribute('data-scene', slug);
-
-      var pageUrl = rootPath + slug;
-      routeUpdate(pageUrl, true, {slug: slug});
+      clickSceneEl(sceneItemEl, true);
     });
 
     if (scenesFormEl) {
+      var selectedSceneEl;
+
       scenesFormEl.addEventListener('submit', function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
-        var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
+        selectedSceneEl = scenesFormEl.querySelector('input[name="scene"]:checked');
         if (selectedSceneEl) {
           var slug = selectedSceneEl.value;
 
-          var pageUrl = rootPath + slug;
-          routeUpdate(pageUrl, true, {slug: slug});
-
-          scenesFormEl.setAttribute('data-scene', slug);
+          clickSceneEl(slug, false);
         }
       });
     }
-  });
 
-  function routeUpdate (href, push, data) {
-    var path = getPath(href);
+    function routeUpdate (href, push, data) {
+      var path = getPath(href);
 
-    if (path === rootPath + 'profile') {
-      document.documentElement.setAttribute('data-layout', 'profile');
-    } else if (path.indexOf(rootPath + 'polyfill') === 0) {
-      document.documentElement.setAttribute('data-layout', 'polyfill');
-    } else {
-      document.documentElement.setAttribute('data-layout', 'play');
-    }
-    document.documentElement.setAttribute('data-path', path);
+      if (path === rootPath + 'profile') {
+        document.documentElement.setAttribute('data-layout', 'profile');
+      } else if (path.indexOf(rootPath + 'polyfill') === 0) {
+        document.documentElement.setAttribute('data-layout', 'polyfill');
+      } else {
+        document.documentElement.setAttribute('data-layout', 'play');
+      }
+      document.documentElement.setAttribute('data-path', path);
 
-    if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
-      return false;
-    }
+      if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
+        return false;
+      }
 
-    var titleEl = document.querySelector('title');
-    var title = pageTitles[path];
+      var titleEl = document.querySelector('title');
+      var title = pageTitles[path];
 
-    if (path !== rootPath && title) {
-      titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
-      titleEl.setAttribute('data-l10n-id', 'title_page');
-    } else {
-      titleEl.removeAttribute('data-l10n-args');
-      titleEl.setAttribute('data-l10n-id', 'title_default');
-    }
+      if (path !== rootPath && title) {
+        titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
+        titleEl.setAttribute('data-l10n-id', 'title_page');
+      } else {
+        titleEl.removeAttribute('data-l10n-args');
+        titleEl.setAttribute('data-l10n-id', 'title_default');
+      }
 
-    if (href in startUrls) {
-      sceneEl.setAttribute('src', startUrls[path]);
-    }
+      if (data && data.type === 'scene' && data.slug) {
+        clickSceneEl(data.slug, false);
+      }
 
-    // TODO: Handle `popState` navigation.
-    if (push !== false) {
-      var state = {};
-      state.path = path;
-      state.title = title;
       if (href in startUrls) {
-        state.startUrl = startUrls[href];
+        sceneEl.setAttribute('src', startUrls[path]);
       }
-      window.history.pushState(state, title, path);
 
-      if ('ga' in window) {
-        ga('set', {
-          page: window.location.pathname,
-          title: title
-        });
-        ga('send', 'pageview');
+      // TODO: Handle `popState` navigation.
+      if (push !== false) {
+        var state = {};
+        state.path = path;
+        state.title = title;
+        if (href in startUrls) {
+          state.startUrl = startUrls[href];
+        }
+        window.history.pushState(state, title, path);
+
+        if ('ga' in window) {
+          ga('set', {
+            page: window.location.pathname,
+            title: title
+          });
+          ga('send', 'pageview');
+        }
       }
+
+      return true;
     }
-
-    return true;
-  }
-
-  // document.addEventListener('click', function (evt) {
-  //   if (evt.target.tagName === 'A' &&
-  //       evt.target.origin === window.location.origin) {
-  //     evt.preventDefault();
-  //     if (evt.target.href !== window.location.href) {
-  //       routeUpdate(e.target.href, true);
-  //     }
-  //   }
-  // }, true);
+  });
 
   /**
    * Check for positional tracking.
    */
-  function hasPositionalTracking (isMobile) {
+  function hasPositionalTracking (isMobile, displays) {
     var supportsPositional = isMobile;
     if (supportsPositional) {
       return true;
     }
-    displays.connected.concat(displays.presenting).forEach(function (display) {
+    displays = displays || [];
+    displays.forEach(function (display) {
       if (display && display.capabilities && display.capabilities.hasPosition) {
         supportsPositional = true;
       }
@@ -501,121 +494,4 @@
       return _isMobile || isSamsungGearVR();
     };
   })();
-
-    // var displays = {
-    //   available: [],
-    //   connected: [],
-    //   presenting: []
-    // };
-    //
-    // var headsets = {
-    //   htc_vive: {
-    //     name: 'HTC Vive',
-    //     slug: 'htc_vive'
-    //   },
-    //   oculus_rift: {
-    //     name: 'Oculus Rift',
-    //     slug: 'oculus_rift'
-    //   },
-    //   google_daydream: {
-    //     name: 'Google Daydream',
-    //     slug: 'google_daydream'
-    //   },
-    //   samsung_gear_vr: {
-    //     name: 'Samsung Gear VR',
-    //     slug: 'samsung_gear_vr'
-    //   },
-    //   google_cardboard: {
-    //     name: 'Google Cardboard',
-    //     slug: 'google_cardboard'
-    //   },
-    //   osvr_hdk2: {
-    //     name: 'OSVR HDK2',
-    //     slug: 'osvr_hdk2'
-    //   },
-    //   none: {
-    //     name: '(None)',
-    //     slug: 'none'
-    //   }
-    // };
-    //
-    // var filteredHeadsets = {};
-    // Object.keys(headsets).forEach(function (headsetKey) {
-    //   filteredHeadsets[headsetKey] = '';
-    // });
-    //
-    // function getDisplaySlug (display) {
-    //   var displayName = (display.displayName || display.name || '').toLowerCase();
-    //   if (displayName.indexOf('oculus') > -1) {
-    //     return headsets.oculus_rift.slug;
-    //   } else if (displayName.indexOf('openvr') > -1 || displayName.indexOf('vive') > -1) {
-    //     return headsets.htc_vive.slug;
-    //   } else if (displayName.indexOf('gear') > -1) {
-    //     return headsets.samsung_gear_vr.slug;
-    //   } else if (displayName.indexOf('daydream') > -1) {
-    //     return headsets.google_daydream.slug;
-    //   } else if (displayName.indexOf('osvr') > -1) {
-    //     return headsets.osvr_hdk2.slug;
-    //   }
-    //   return supports.webvrPositional ? headsets.google_cardboard.slug : headsets.none.slug;
-    // }
-    //
-    // function addOrUpdateDisplay (display, displayGroupType) {
-    //   var displaysList = displays[displayGroupType];
-    //   if (!displaysList) {
-    //     return;
-    //   }
-    //   var idx = displaysList.indexOf(display.displayId);
-    //   if (idx > -1) {
-    //     displaysList[idx] = display;
-    //     headsets[getDisplaySlug(display)][displayGroupType] = true;
-    //     return;
-    //   }
-    //   displaysList.push(display);
-    //   headsets[getDisplaySlug(display)][displayGroupType] = true;
-    // }
-    //
-    // function removeDisplay (display, displayGroupType) {
-    //   var displaysList = displays[displayGroupType];
-    //   if (!displaysList) {
-    //     return;
-    //   }
-    //   var idx = displaysList.indexOf(display.displayId);
-    //   if (idx > -1) {
-    //     displaysList.splice(idx, 1);
-    //     headsets[getDisplaySlug(display)][displayGroupType] = true;
-    //   }
-    // }
-    //
-    // if (supports.webvr) {
-    //   navigator.getVRDisplays().then(function (displays) {
-    //     displays.forEach(function (display) {
-    //       if (display.isConnected) {
-    //         addOrUpdateDisplay(display, 'available');
-    //       } else {
-    //         removeDisplay(display, 'available');
-    //         addOrUpdateDisplay(display, 'connected');
-    //       }
-    //     });
-    //     supports.webvrPositional = hasPositionalTracking(isMobile);
-    //   });
-    //
-    //   window.addEventListener('vrdisplayconnect', function (evt) {
-    //     addOrUpdateDisplay(evt.display, 'available');
-    //     addOrUpdateDisplay(evt.display, 'connected');
-    //   });
-    //
-    //   window.addEventListener('vrdisplaydisconnect', function (evt) {
-    //     addOrUpdateDisplay(evt.display, 'available');
-    //     addOrUpdateDisplay(evt.display, 'disconnected');
-    //   });
-    //
-    //   window.addEventListener('vrdisplaypresentchange', function (evt) {
-    //     if (evt.isPresenting) {
-    //       addOrUpdateDisplay(evt.display, 'presenting');
-    //     } else {
-    //       removeDisplay(evt.display, 'presenting');
-    //     }
-    //   });
-    // }
 })();
