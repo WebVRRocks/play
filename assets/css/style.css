@@ -138,7 +138,8 @@ h6 {
 }
 
 html[data-layout~="play"] [data-page~="play"],
-html[data-layout~="profile"] [data-page~="profile"] {
+html[data-layout~="profile"] [data-page~="profile"],
+html[data-layout~="polyfill"] [data-page~="polyfill"] {
   display: block;
 }
 

@@ -162,6 +162,6 @@
     });
   }
 
-  initGoogleAnalytics('UA-24056643-4', {alwaysSendReferrer: true});
+  initGoogleAnalytics('UA-XXXXXXXX-Y', {alwaysSendReferrer: true});
   initGoogleAnalyticsEvents();
 })();
