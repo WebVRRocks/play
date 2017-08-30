@@ -28,64 +28,68 @@
     <script src="assets/js/remote.js" async defer data-requires-online="true"></script>
     <style id="css-dynamic-rules"></style>
   </head>
-  <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+  <body class="bg-near-black white">
     <section id="play" data-page="play">
-      <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
-      <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
-      <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25">
-        <h2 class="dn"><a href="#demos">Demos</a></h2>
-        <ol data-section="scenes" class="list f0 h-100">
-          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" class="dib vw-25 h-100" id="a_painter">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_painter" id="radio_a_painter">
-              <div itemprop="details" class="demo-details f5 h-100">
-                <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
-                  <span itemprop="name" class="db demo-name truncate">A-Painter</span>
-                </a>
-                <span itemprop="description" class="dn">Paint and sketch in VR by Mozilla A-Frame team</span>
-              </div>
-            </label>
-          </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" class="dib vw-25 h-100" id="a_saturday_night">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_saturday_night" id="radio_a_saturday_night">
-              <div itemprop="details" class="demo-details f5 h-100">
-                <a itemprop="url" href="https://aframe.io/a-saturday-night/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_saturday_night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
-                  <span itemprop="name" class="db demo-name truncate">A Saturday Night</span>
-                </a>
-                <span itemprop="description" class="dn">Record and share your dance moves</span>
-              </div>
-            </label>
-          </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" class="dib vw-25 h-100" id="puzzle_rain">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="puzzle_rain" id="radio_a_puzzle_rain">
-              <div itemprop="details" class="demo-details f5 h-100">
-                <a itemprop="url" href="https://mozvr.com/puzzle-rain/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle_rain/poster.png); background-size: cover"></div>
-                  <span itemprop="name" class="db demo-name truncate">Puzzle Rain</span>
-                </a>
-                <span itemprop="description" class="dn">A musical WebVR journey for the HTC VIVE</span>
-              </div>
-            </label>
-          </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" class="dib vw-25 h-100" id="a_blast">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_blast" id="radio_a_blast">
-              <div itemprop="details" class="demo-details f5 h-100">
-                <a itemprop="url" href="https://aframe.io/a-blast/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_blast/poster.png); background-size: cover"></div>
-                  <span itemprop="name" class="db demo-name truncate">A-Blast</span>
-                </a>
-                <span itemprop="description" class="dn">Save the world from the cutest creatures in the universe</span>
-              </div>
-            </label>
-          </li>
-        </ol>
-        <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
-      </form>
+      <section id="demos" class="demos relative h-100">
+        <section class="pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+          <h2 class="a11y-green bb f2 vw-25 pb4 lh-solid ma0 w-100" data-l10n-id="play">Play</h2>
+        </section>
+        <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
+        <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25 pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+          <h2 class="dn"><a href="#demos">Demos</a></h2>
+          <ol data-section="scenes" class="list f0 h-100">
+            <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" class="dib vw-25 h-100" id="a_painter">
+              <label class="db w-100 h-100">
+                <input type="radio" name="scene" class="focusable-radio o-0" value="a_painter" id="radio_a_painter">
+                <div itemprop="details" class="demo-details f5 h-100">
+                  <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                    <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
+                    <span itemprop="name" class="db demo-name truncate">A-Painter</span>
+                  </a>
+                  <span itemprop="description" class="dn">Paint and sketch in VR by Mozilla A-Frame team</span>
+                </div>
+              </label>
+            </li>
+            <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" class="dib vw-25 h-100" id="a_saturday_night">
+              <label class="db w-100 h-100">
+                <input type="radio" name="scene" class="focusable-radio o-0" value="a_saturday_night" id="radio_a_saturday_night">
+                <div itemprop="details" class="demo-details f5 h-100">
+                  <a itemprop="url" href="https://aframe.io/a-saturday-night/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                    <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_saturday_night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
+                    <span itemprop="name" class="db demo-name truncate">A Saturday Night</span>
+                  </a>
+                  <span itemprop="description" class="dn">Record and share your dance moves</span>
+                </div>
+              </label>
+            </li>
+            <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" class="dib vw-25 h-100" id="puzzle_rain">
+              <label class="db w-100 h-100">
+                <input type="radio" name="scene" class="focusable-radio o-0" value="puzzle_rain" id="radio_a_puzzle_rain">
+                <div itemprop="details" class="demo-details f5 h-100">
+                  <a itemprop="url" href="https://mozvr.com/puzzle-rain/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                    <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle_rain/poster.png); background-size: cover"></div>
+                    <span itemprop="name" class="db demo-name truncate">Puzzle Rain</span>
+                  </a>
+                  <span itemprop="description" class="dn">A musical WebVR journey for the HTC VIVE</span>
+                </div>
+              </label>
+            </li>
+            <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" class="dib vw-25 h-100" id="a_blast">
+              <label class="db w-100 h-100">
+                <input type="radio" name="scene" class="focusable-radio o-0" value="a_blast" id="radio_a_blast">
+                <div itemprop="details" class="demo-details f5 h-100">
+                  <a itemprop="url" href="https://aframe.io/a-blast/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                    <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_blast/poster.png); background-size: cover"></div>
+                    <span itemprop="name" class="db demo-name truncate">A-Blast</span>
+                  </a>
+                  <span itemprop="description" class="dn">Save the world from the cutest creatures in the universe</span>
+                </div>
+              </label>
+            </li>
+          </ol>
+          <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
+        </form>
+      </section>
     </section>
     <div id="remote" class="remote w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></div>
     <section id="profile" data-page="profile">

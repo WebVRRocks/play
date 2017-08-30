@@ -143,6 +143,21 @@ html[data-layout~="polyfill"] [data-page~="polyfill"] {
   display: block;
 }
 
+html[data-layout~="play"],
+html[data-layout~="play"] body,
+html[data-layout~="play"] [data-page~="play"] {
+  height: 100%;
+}
+
+html[data-layout~="play"] body {
+  background: #fff;
+}
+
+html[data-layout~="play"] .demos {
+  background: #111;
+  position: relative;
+}
+
 .scene[data-state~="pending"] {
   opacity: 0;
   transition: .5s opacity ease-in;
