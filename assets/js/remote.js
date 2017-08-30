@@ -1,8 +1,14 @@
 /* global ga, SocketPeer, SpatialNavigation */
 (function () {
-  var rootPath = '/';
+  var htmlEl = document.documentElement;
   var remoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
   var spatialNavigationPath = 'assets/js/spatial_navigation.js';
+
+  var rootPath = '/';
+  try {
+    rootPath = htmlEl.getAttribute('data-root') || rootPath;
+  } catch (err) {
+  }
 
   var remoteEl = document.querySelector('#remote');
   if (remoteEl) {
@@ -51,8 +57,8 @@
   var dependencies = new Dependencies();
 
   window.addEventListener('load', function () {
-    rootPath = document.documentElement.getAttribute('data-root') || rootPath;
-    remoteSocketPath = document.documentElement.getAttribute('data-remote-socket-path') || remoteSocketPath;
+    rootPath = htmlEl.getAttribute('data-root') || rootPath;
+    remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || remoteSocketPath;
 
     remoteEl = document.querySelector('#remote');
 

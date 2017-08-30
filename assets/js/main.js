@@ -1,8 +1,10 @@
 /* global ga, UAParser, URLSearchParams */
 (function () {
+  var htmlEl = document.documentElement;
+
   var rootPath = '/';
   try {
-    rootPath = document.documentElement.getAttribute('data-root') || rootPath;
+    rootPath = htmlEl.getAttribute('data-root') || rootPath;
   } catch (err) {
   }
 
@@ -104,14 +106,14 @@
     supports.webvr = !!navigator.getVRDisplays;
     supports.webvrPositional = hasPositionalTracking(supports.mobile);
 
-    document.documentElement.setAttribute('data-desktop', supports.desktop);
-    document.documentElement.setAttribute('data-tablet', supports.tablet);
-    document.documentElement.setAttribute('data-mobile', supports.mobile);
-    document.documentElement.setAttribute('data-platform', supports.touch);
-    document.documentElement.setAttribute('data-supports-touch', supports.touch);
-    document.documentElement.setAttribute('data-supports-webvr-positional', supports.webvrPositional);
-    document.documentElement.setAttribute('data-supports-webvr', supports.webvr);
-    document.documentElement.setAttribute('data-supports-webvr-disconnected', supports.webvrPositional);
+    htmlEl.setAttribute('data-desktop', supports.desktop);
+    htmlEl.setAttribute('data-tablet', supports.tablet);
+    htmlEl.setAttribute('data-mobile', supports.mobile);
+    htmlEl.setAttribute('data-platform', supports.touch);
+    htmlEl.setAttribute('data-supports-touch', supports.touch);
+    htmlEl.setAttribute('data-supports-webvr-positional', supports.webvrPositional);
+    htmlEl.setAttribute('data-supports-webvr', supports.webvr);
+    htmlEl.setAttribute('data-supports-webvr-disconnected', supports.webvrPositional);
   }
 
   function renderProfile () {
@@ -251,7 +253,7 @@
   }
 
   window.addEventListener('load', function () {
-    rootPath = document.documentElement.getAttribute('data-root') || rootPath;
+    rootPath = htmlEl.getAttribute('data-root') || rootPath;
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
@@ -381,13 +383,13 @@
       var path = getPath(href);
 
       if (path === rootPath + 'profile') {
-        document.documentElement.setAttribute('data-layout', 'profile');
+        htmlEl.setAttribute('data-layout', 'profile');
       } else if (path.indexOf(rootPath + 'polyfill') === 0) {
-        document.documentElement.setAttribute('data-layout', 'polyfill');
+        htmlEl.setAttribute('data-layout', 'polyfill');
       } else {
-        document.documentElement.setAttribute('data-layout', 'play');
+        htmlEl.setAttribute('data-layout', 'play');
       }
-      document.documentElement.setAttribute('data-path', path);
+      htmlEl.setAttribute('data-path', path);
 
       if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
         return false;
