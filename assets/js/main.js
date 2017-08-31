@@ -271,7 +271,7 @@
 
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
 
-    Array.prototype.forEach.call(document.querySelectorAll('[itemprop="scene"][data-slug]'), function (sceneItemEl) {
+    Array.prototype.forEach.call(document.querySelectorAll('li[itemprop="scene"][data-slug]'), function (sceneItemEl) {
       var slug = sceneItemEl.getAttribute('data-slug');
       var slugPath = rootPath + slug;
       if (path === slugPath) {
@@ -287,6 +287,10 @@
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
     pageTitles[rootPath] = titleEl.textContent;
     cssDynamicRulesEl.cssText += 'html[data-layout~="play"] [data-slug="play"] { opacity: 1; }';
+
+    var loadANewSiteEl = document.querySelector('[data-l10n-id="load_a_new_site"]');
+    pageTitles[rootPath + 'add'] = loadANewSiteEl.textContent;
+    cssDynamicRulesEl.cssText += 'html[data-layout~="add"] [data-slug="add"] { opacity: 1; }';
 
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
     pageTitles[rootPath + 'profile'] = profileHeadingEl.textContent;

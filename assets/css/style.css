@@ -236,9 +236,15 @@ html[data-layout~="play"] body {
   opacity: 1;
 }
 
-[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"] {
+[data-form="scenes"] {
+  height: calc(16vh + 5.4rem);
+  overflow-y: hidden;
+}
+
+[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"],
+[data-form="scenes"][data-scene] .add-area {
   opacity: .5;
-  transition: .15s opacity ease-in-out;
+  transition: .15s opacity ease-in;
 }
 
 [data-form="scenes"][data-scene] .focusable-radio:checked ~ [itemprop="details"] {
@@ -249,4 +255,25 @@ html[data-layout~="play"] body {
 .focusable-link:focus {
   -moz-outline-style: none;
   outline: 0;
+}
+
+.add-area [itemprop="image"] {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-area [itemprop="image"]:before {
+  align-self: center;
+  color: rgba(255,255,255,.5);
+  content: "➕";
+  font-size: 3rem;
+  font-size: calc(1rem + 1.75vw + 1.75vh);
+  transition: .15s transform ease-in;
+  transform: scale(.9);
+}
+
+.add-area [itemprop="url"]:hover [itemprop="image"]:before {
+  transform: scale(1.1);
 }

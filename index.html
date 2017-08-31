@@ -28,18 +28,18 @@
     <script src="assets/js/remote.js" defer data-requires-online="true"></script>
     <style id="css-dynamic-rules"></style>
   </head>
-  <body class="bg-near-black white pa3 pv4 pv3-ns pa5-ns pv5-ns pa6-l pv6-l">
+  <body class="bg-near-black white relative">
     <section id="play" data-page="play">
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
-      <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25">
+      <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25 w-100 h-100 dib">
         <h2 class="dn"><a href="#demos">Demos</a></h2>
-        <ol data-section="scenes" class="list f0 h-100">
+        <ol data-section="scenes" class="list f0 dib mw7-5 nowrap overflow-x-scroll pr3 ml3">
           <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" class="dib vw-25 h-100" id="a_painter">
             <label class="db w-100 h-100">
               <input type="radio" name="scene" class="focusable-radio o-0" value="a_painter" id="radio_a_painter">
               <div itemprop="details" class="demo-details f5 h-100">
-                <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3 pl2">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
                   <span itemprop="name" class="db demo-name truncate">A-Painter</span>
                 </a>
@@ -84,6 +84,19 @@
             </label>
           </li>
         </ol>
+        <div class="dib add-area overflow-x-scroll">
+          <p itemprop="scene" itemscope data-slug="add" class="relative top-0 dib vw-25 add-container" id="add">
+            <label class="db w-100 h-100">
+              <input type="radio" name="scene" class="focusable-radio o-0" value="add" id="radio_add">
+              <div itemprop="details" class="demo-details f5">
+                <a itemprop="url" href="/add" class="focusable-link no-underline white o-50 glow db h-100 pa3">
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10"></div>
+                  <span itemprop="name" class="db demo-name truncate" data-l10n-id="load_a_new_site">Load a new site</span>
+                </a>
+              </div>
+            </label>
+          </p>
+        </div>
         <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
       </form>
     </section>
