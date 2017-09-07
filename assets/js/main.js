@@ -1,10 +1,14 @@
 /* global ga, UAParser, URLSearchParams */
 (function () {
+  var state = {
+    rootPath: '/',
+    supports: {}
+  };
+  window.state = state;
   var htmlEl = document.documentElement;
 
-  var rootPath = '/';
   try {
-    rootPath = htmlEl.getAttribute('data-root') || rootPath;
+    state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
   } catch (err) {
   }
 
@@ -13,7 +17,7 @@
     var qs = new URLSearchParams(window.location.search.substr(1));
     var swEnabled = qs.get('sw') !== '0';
     if (swEnabled && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register(rootPath + 'sw.js').then(function (reg) {
+      navigator.serviceWorker.register(state.rootPath + 'sw.js').then(function (reg) {
         console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
       }).catch(function (err) {
         console.error('Service Worker registration failed:', err);
@@ -87,8 +91,6 @@
 
   var osCompatValueEl;
 
-  var supports = {};
-
   function parseProfile () {
     osValueEl = document.querySelector('#os_value');
     browserValueEl = document.querySelector('#browser_value');
@@ -98,22 +100,22 @@
 
     osCompatValueEl = document.querySelector('#os_compat_value > span');
 
-    supports.touch = 'ontouchstart' in window;
-    supports.mobile = isMobile();
-    supports.tablet = isTablet();
-    supports.desktop = !supports.mobile && !supports.tablet;
+    state.supports.touch = 'ontouchstart' in window;
+    state.supports.mobile = isMobile();
+    state.supports.tablet = isTablet();
+    state.supports.desktop = !state.supports.mobile && !state.supports.tablet;
 
-    supports.webvr = !!navigator.getVRDisplays;
-    supports.webvrPositional = hasPositionalTracking(supports.mobile);
+    state.supports.webvr = !!navigator.getVRDisplays;
+    state.supports.webvrPositional = hasPositionalTracking(state.supports.desktop, state.supports.mobile);
 
-    htmlEl.setAttribute('data-desktop', supports.desktop);
-    htmlEl.setAttribute('data-tablet', supports.tablet);
-    htmlEl.setAttribute('data-mobile', supports.mobile);
-    htmlEl.setAttribute('data-platform', supports.touch);
-    htmlEl.setAttribute('data-supports-touch', supports.touch);
-    htmlEl.setAttribute('data-supports-webvr-positional', supports.webvrPositional);
-    htmlEl.setAttribute('data-supports-webvr', supports.webvr);
-    htmlEl.setAttribute('data-supports-webvr-disconnected', supports.webvrPositional);
+    htmlEl.setAttribute('data-desktop', state.supports.desktop);
+    htmlEl.setAttribute('data-tablet', state.supports.tablet);
+    htmlEl.setAttribute('data-mobile', state.supports.mobile);
+    htmlEl.setAttribute('data-platform', state.supports.touch);
+    htmlEl.setAttribute('data-supports-touch', state.supports.touch);
+    htmlEl.setAttribute('data-supports-webvr-positional', state.supports.webvrPositional);
+    htmlEl.setAttribute('data-supports-webvr', state.supports.webvr);
+    htmlEl.setAttribute('data-supports-webvr-disconnected', state.supports.webvrPositional);
   }
 
   function renderProfile () {
@@ -191,9 +193,9 @@
           deviceValueEl.setAttribute('data-l10n-args', deviceStr);
         } else {
           deviceValueEl.removeAttribute('data-l10n-args');
-          if (supports.tablet) {
+          if (state.supports.tablet) {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_tablet');
-          } else if (supports.mobile) {
+          } else if (state.supports.mobile) {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_mobile');
           } else {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_desktop');
@@ -241,8 +243,8 @@
 
   function getPath (href) {
     var pathname = href || window.location.pathname;
-    if (pathname === rootPath || pathname === '/' || pathname === '/index' || pathname === '/index.html') {
-      return rootPath;
+    if (pathname === state.rootPath || pathname === '/' || pathname === '/index' || pathname === '/index.html') {
+      return state.rootPath;
     }
     return pathname.replace(/\.html$/i, '').replace(/\/+/g, '/');
   }
@@ -253,7 +255,7 @@
   }
 
   window.addEventListener('load', function () {
-    rootPath = htmlEl.getAttribute('data-root') || rootPath;
+    state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
@@ -266,39 +268,53 @@
     //   sceneEl.setAttribute('data-state', 'loaded');
     // });
 
-    var path = getPath();
+    state.path = getPath();
     var routeData = {};
 
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
+    var cssSelectorsToShow = [
+      'html[data-layout~="play"] [data-slug-clickable][data-slug="play"]',
+      'html[data-layout~="add"] [data-slug-clickable][data-slug="add"]',
+      'html[data-layout~="profile"] [data-slug="profile"]',
+      'html[data-layout~="polyfill_v2"] [data-slug="profile"]'
+    ];
+    var cssSelectorsToHighlight = [];
 
     Array.prototype.forEach.call(document.querySelectorAll('li[itemprop="scene"][data-slug]'), function (sceneItemEl) {
       var slug = sceneItemEl.getAttribute('data-slug');
-      var slugPath = rootPath + slug;
-      if (path === slugPath) {
+      var slugPath = state.rootPath + slug;
+      if (slugPath === state.path) {
         routeData.type = 'scene';
         routeData.slug = slug;
       }
       pageTitles[slugPath] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
       startUrls[slugPath] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
-      cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-page~="play"] { display: block; }';
-      cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] { box-shadow: 0 0 10px rgba(255,255,255,.5); opacity: 1; }';
+
+      cssSelectorsToShow.push('html[data-path^="/' + slug + '"] [data-page~="play"]');
+      cssSelectorsToHighlight.push('html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] [itemprop="image"]');
     });
 
-    var titleEl = document.querySelector('[data-l10n-id="title_default"]');
-    pageTitles[rootPath] = titleEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-layout~="play"] [data-slug="play"] { opacity: 1; }';
+    cssDynamicRulesEl.innerHTML = cssSelectorsToShow.join(',\n') + ' {\n' +
+      '  pointer-events: auto; \n' +
+      '  opacity: 1; \n' +
+      '  visibility: visible;\n' +
+      '}\n\n' +
+      cssSelectorsToHighlight.join(',\n') + ' {\n' +
+      '  box-shadow: 0 0 10px rgba(255,255,255,.5);\n' +
+      '  opacity: 1;\n' +
+      '}\n';
 
-    var loadANewSiteEl = document.querySelector('[data-l10n-id="load_a_new_site"]');
-    pageTitles[rootPath + 'add'] = loadANewSiteEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-layout~="add"] [data-slug="add"] { opacity: 1; }';
+    var titleEl = document.querySelector('[data-l10n-id="title_default"]');
+    pageTitles[state.rootPath] = titleEl.textContent;
+
+    var loadANewSiteEl = document.querySelector('h2[data-l10n-id="load_a_new_site"]');
+    pageTitles[state.rootPath + 'add'] = loadANewSiteEl.textContent;
 
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
-    pageTitles[rootPath + 'profile'] = profileHeadingEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-layout~="profile"] [data-slug="profile"] { opacity: 1; }';
+    pageTitles[state.rootPath + 'profile'] = profileHeadingEl.textContent;
 
     var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
-    pageTitles[rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-layout~="polyfill_v2"] [data-slug="profile"] { opacity: 1; }';
+    pageTitles[state.rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
 
     var scenesFormEl = document.querySelector('[data-form="scenes"]');
     var scenesEl = document.querySelector('[data-section~="scenes"]');
@@ -334,18 +350,12 @@
       scenesFormEl.setAttribute('data-scene', slug);
 
       if (navigate) {
-        var pageUrl = rootPath + slug;
-        routeUpdate(pageUrl, true, {type: 'scene', slug: slug});
+        var pageUrl = state.rootPath + slug;
+        routeUpdate(state, pageUrl, true, {type: 'scene', slug: slug});
       }
 
       return slug;
     }
-
-    routeUpdate(path, false, routeData);
-
-    parseProfile();
-
-    renderProfile();
 
     scenesEl.addEventListener('click', function (evt) {
       if (!evt.target.closest || evt.shiftKey || evt.altKey || evt.ctrlKey) {
@@ -383,13 +393,15 @@
       });
     }
 
-    function routeUpdate (href, push, data) {
+    function routeUpdate (state, href, push, data) {
       var path = getPath(href);
 
-      if (path === rootPath + 'profile') {
+      if (path === state.rootPath + 'profile') {
         htmlEl.setAttribute('data-layout', 'profile');
-      } else if (path.indexOf(rootPath + 'polyfill') === 0) {
+      } else if (path.indexOf(state.rootPath + 'polyfill') === 0) {
         htmlEl.setAttribute('data-layout', 'polyfill');
+      } else if (path === state.rootPath + 'add') {
+        htmlEl.setAttribute('data-layout', 'play add');
       } else {
         htmlEl.setAttribute('data-layout', 'play');
       }
@@ -402,7 +414,7 @@
       var titleEl = document.querySelector('title');
       var title = pageTitles[path];
 
-      if (path !== rootPath && title) {
+      if (path !== state.rootPath && title) {
         titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
         titleEl.setAttribute('data-l10n-id', 'title_page');
       } else {
@@ -439,12 +451,18 @@
 
       return true;
     }
+
+    routeUpdate(state, state.path, false, routeData);
+
+    parseProfile();
+
+    renderProfile();
   });
 
   /**
    * Check for positional tracking.
    */
-  function hasPositionalTracking (isMobile, displays) {
+  function hasPositionalTracking (isDesktop, isMobile, displays) {
     var supportsPositional = isMobile;
     if (supportsPositional) {
       return true;
@@ -458,9 +476,7 @@
     if (supportsPositional) {
       return true;
     }
-    if (!supports.desktop && ('ondevicemotion' in window)) {
-      return true;
-    }
+    return !isDesktop && ('ondevicemotion' in window);
   }
 
   /**

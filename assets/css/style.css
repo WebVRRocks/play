@@ -10,11 +10,6 @@ body {
   width: 100%;
 }
 
-html,
-body {
-  position: relative;
-}
-
 html {
   font-size: 14px;
 }
@@ -22,14 +17,6 @@ html {
 body {
   font: 300 1rem/1.2 BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
   line-height: 1.5rem;
-}
-
-.apink {
-  color: #ef2d5e;
-}
-
-.bg-apink {
-  background-color: #ef2d5e;
 }
 
 .code,
@@ -134,18 +121,27 @@ h6 {
 }
 
 [data-page] {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: .15s opacity ease-in;
+  visibility: hidden;
 }
 
 html[data-layout~="play"] [data-page~="play"],
+html[data-layout~="add"] [data-page~="add"],
 html[data-layout~="profile"] [data-page~="profile"],
 html[data-layout~="polyfill"] [data-page~="polyfill"] {
-  display: block;
+  opacity: 0;
+  pointer-events: auto;
+  transition: .15s opacity ease-in;
+  visibility: hidden;
 }
 
 .scene[data-state~="pending"] {
   opacity: 0;
+  pointer-events: none;
   transition: .5s opacity ease-in;
+  visibility: hidden;
 }
 
 .scene[data-state~="loaded"] {
@@ -198,7 +194,13 @@ html[data-layout~="play"] body {
 }
 
 [itemprop="details"] {
-  padding-top: 2vh;
+  /*margin-top: -2vh;*/
+  background:red;
+  /*padding-bottom: 2vh;*/
+}
+
+[itemprop="url"] {
+  /*padding-bottom: 16px;*/
 }
 
 [itemprop="image"] {
@@ -237,12 +239,12 @@ html[data-layout~="play"] body {
 }
 
 [data-form="scenes"] {
-  height: calc(16vh + 5.4rem);
+  /*height: calc(16vh + 3.4rem);*/
   overflow-y: hidden;
 }
 
 [data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"],
-[data-form="scenes"][data-scene] .add-area {
+[data-form="scenes"][data-scene] .add-button-area {
   opacity: .5;
   transition: .15s opacity ease-in;
 }
@@ -257,14 +259,14 @@ html[data-layout~="play"] body {
   outline: 0;
 }
 
-.add-area [itemprop="image"] {
+.add-button-area [itemprop="image"] {
   background-color: #eee;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.add-area [itemprop="image"]:before {
+.add-button-area [itemprop="image"]:before {
   align-self: center;
   color: rgba(255,255,255,.5);
   content: "➕";
@@ -274,6 +276,6 @@ html[data-layout~="play"] body {
   transform: scale(.9);
 }
 
-.add-area [itemprop="url"]:hover [itemprop="image"]:before {
+.add-button-area [itemprop="url"]:hover [itemprop="image"]:before {
   transform: scale(1.1);
 }

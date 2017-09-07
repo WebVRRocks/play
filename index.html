@@ -1,5 +1,6 @@
 <!doctype html>
-<html data-root-path="/"
+<html class="relative"
+      data-root-path="/"
       data-remote-socket-path="https://remote.webvr.rocks/socketpeer/"
       data-path="/play"
       data-layout="play">
@@ -28,16 +29,16 @@
     <script src="assets/js/remote.js" defer data-requires-online="true"></script>
     <style id="css-dynamic-rules"></style>
   </head>
-  <body class="bg-near-black white relative">
+  <body class="bg-near-black white relative overflow-y-hidden">
     <section id="play" data-page="play">
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
       <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25 w-100 h-100 dib">
         <h2 class="dn"><a href="#demos">Demos</a></h2>
-        <ol data-section="scenes" class="list f0 dib mw7-5 nowrap overflow-x-scroll pr3 ml3">
-          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" class="dib vw-25 h-100" id="a_painter">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_painter" id="radio_a_painter">
+        <ol data-section="scenes" class="list f0 dib v-top mw7-5 nowrap overflow-x-scroll pr3 ml3 vh-100">
+          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" data-slug-clickable class="dib vw-25 h-100" id="a_painter">
+            <label class="db w-100 h-100 relative">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_painter" id="radio_a_painter">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3 pl2">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
@@ -47,9 +48,9 @@
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" class="dib vw-25 h-100" id="a_saturday_night">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_saturday_night" id="radio_a_saturday_night">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" data-slug-clickable class="dib vw-25 h-100" id="a_saturday_night">
+            <label class="db w-100 h-100 relative">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_saturday_night" id="radio_a_saturday_night">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-saturday-night/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_saturday_night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
@@ -59,9 +60,9 @@
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" class="dib vw-25 h-100" id="puzzle_rain">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="puzzle_rain" id="radio_a_puzzle_rain">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" data-slug-clickable class="dib vw-25 h-100" id="puzzle_rain">
+            <label class="db w-100 h-100 relative">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="puzzle_rain" id="radio_a_puzzle_rain">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://mozvr.com/puzzle-rain/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle_rain/poster.png); background-size: cover"></div>
@@ -71,9 +72,9 @@
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" class="dib vw-25 h-100" id="a_blast">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="a_blast" id="radio_a_blast">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" data-slug-clickable class="dib vw-25 h-100" id="a_blast">
+            <label class="db w-100 h-100 relative">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_blast" id="radio_a_blast">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-blast/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_blast/poster.png); background-size: cover"></div>
@@ -84,21 +85,24 @@
             </label>
           </li>
         </ol>
-        <div class="dib add-area overflow-x-scroll">
-          <p itemprop="scene" itemscope data-slug="add" class="relative top-0 dib vw-25 add-container" id="add">
-            <label class="db w-100 h-100">
-              <input type="radio" name="scene" class="focusable-radio o-0" value="add" id="radio_add">
-              <div itemprop="details" class="demo-details f5">
+        <div class="add-button-area dib v-top overflow-x-scroll vh-100">
+          <div itemprop="scene" itemscope data-slug="add" data-slug-clickable class="clickable-item relative top-0 dib vw-25 h-100 add-button-container" id="add-button">
+            <label class="db w-100 h-100 relative">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="add" id="radio_add">
+              <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="/add" class="focusable-link no-underline white o-50 glow db h-100 pa3">
                   <div itemprop="image" class="bg-center mb2 ba b--black-10"></div>
                   <span itemprop="name" class="db demo-name truncate" data-l10n-id="load_a_new_site">Load a new site</span>
                 </a>
               </div>
             </label>
-          </p>
+          </div>
         </div>
         <button type="submit" data-l10n-id="select_scene" class="relative z-2 dn">Select scene</button>
       </form>
+    </section>
+    <section id="add" data-page="add">
+      <h2 class="a11y-green bb f2 vw-25 pb4 lh-solid" data-l10n-id="load_a_new_site">Load a new site</h2>
     </section>
     <div id="remote" class="remote w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></div>
     <section id="profile" data-page="profile">
