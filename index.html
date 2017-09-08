@@ -30,9 +30,33 @@
     <style id="css-dynamic-rules"></style>
   </head>
   <body class="bg-near-black white relative">
-    <section id="play" data-page="play">
+    <section id="play" data-page="play" class="relative z-2">
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
+      <section id="welcome" data-section="welcome" class="welcome bg-near-white vh-72 overflow-hidden">
+        <div class="wrap pa3 pv4 relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
+          <div class="content relative z-3 w-50">
+            <h2 class="f2 pb3 lh-solid" data-l10n-id="welcome_to_webvr">
+              <span class="db">Welcome to WebVR</span>
+            </h2>
+            <form action="/pair" method="get" class="flex flex-column" data-form="pair">
+              <input type="tel" name="tel" id="tel" class="db pa2 order-1 o-0 glow mw6" placeholder="Enter your phone number"> <label for="tel" class="db f6 o-0 pb1 silver">Phone number</label>
+            </form>
+          </div>
+          <aside class="aside f2 pb3 lh-solid flex items-end justify-end h-100 relative z-3 w-50" data-section="aside">
+            <a href="/pair" id="pair-button" class="pair-button db self-end f5 link glow">
+              <span class="dib gray hover-near-black bb b--transparent hover-b--near-black pb1">Pair your phone as a remote control</span>
+            </a>
+          </aside>
+          <!--
+          <ul class="self-end">
+            <li data-vr-headset="samsung_gear_vr"><a href="/samsung_gear_vr" class="color-inherit">Samsung Gear VR</a></li>
+            <li data-vr-headset="htc_vive"><a href="/htc_vive" class="color-inherit">HTC Vive</a></li>
+            <li data-vr-headset="oculus_rift"><a href="/oculus_rift" class="color-inherit">Oculus Rift</a></li>
+          </ul>
+          -->
+        </div>
+      </section>
       <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25 w-100 h-100 dib">
         <h2 class="dn"><a href="#demos">Demos</a></h2>
         <ol data-section="scenes" class="list f0 dib v-top mw7-5 nowrap overflow-x-scroll pr3 ml3 vh-100">
@@ -102,13 +126,21 @@
       </form>
     </section>
     <section id="add" data-page="add">
-      <div class="wrap mw8 pa3 pv4">
+      <div class="wrap mw8 pa3 pv4 relative z-1">
         <h2 class="a11y-green bb f2 pb3 lh-solid" data-l10n-id="load_a_new_site">Load a new site</h2>
+        <form method="get" action="/add" data-form="add">
+          <fieldset class="pa0 ma0 bw0">
+            <legend class="dn">Submit a site URL</legend>
+            <div class="wrap pt4 f3">
+              <input type="url" name="url" class="font-face-inherit font-family-inherit near-black pa3 w-100" placeholder="https://example.com/">
+            </div>
+          </fieldset>
+        </form>
       </div>
     </section>
     <div id="remote" class="remote w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></div>
     <section id="profile" data-page="profile">
-      <div class="wrap mw8 pa3 pv4">
+      <div class="wrap mw8 pa3 pv4 relative z-1">
         <h2 class="a11y-green bb f2 pb3 lh-solid" data-l10n-id="system_profile">System Profile</h2>
         <dl class="lh-copy f5 fw3 pt5">
           <dt class="o-60" data-l10n-id="os">Operating System</dt>

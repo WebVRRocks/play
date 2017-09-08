@@ -120,7 +120,8 @@ h6 {
   display: none;
 }
 
-[data-page] {
+[data-page],
+/*iframe*/.scene ~ [data-section="welcome"] {
   bottom: 0;
   left: 0;
   opacity: 0;
@@ -136,6 +137,8 @@ html[data-layout~="play"] body {
   overflow-y: hidden;
 }
 
+html[data-path~="/"] /*iframe*/.scene[src=""] ~ [data-section="welcome"],
+html[data-path~="/play"] /*iframe*/.scene[src=""] ~ [data-section="welcome"],
 html[data-layout~="play"] [data-page~="play"],
 html[data-layout~="add"] [data-page~="add"],
 html[data-layout~="profile"] [data-page~="profile"],
@@ -150,7 +153,7 @@ html[data-layout~="polyfill"] [data-page~="polyfill"] {
 .scene[data-state~="pending"] {
   opacity: 0;
   pointer-events: none;
-  transition: .5s opacity ease-in;
+  transition: .15s opacity ease-in;
   visibility: hidden;
 }
 
@@ -276,4 +279,37 @@ html[data-layout~="play"] body {
 
 .add-button-area [itemprop="url"]:hover [itemprop="image"]:before {
   transform: scale(1.1);
+}
+
+[data-section="welcome"] .wrap:before {
+  background: url(../img/vr-bg.png) 100% 100% no-repeat;
+  content: "";
+  height: 90vh;
+  position: absolute;
+  z-index: 3;
+  opacity: .1;
+  filter: invert(1);
+  width: 100%;
+}
+
+.pair-button {
+  padding-right: 2.75rem;
+}
+
+.pair-button:before {
+  background: url(../img/mobile_remote.svg) no-repeat;
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 12px;
+}
+
+[data-form="pair"] input[name="tel"],
+[data-form="pair"] input[name="tel"] + label {
+  transition: .15s opacity ease-in-out;
+}
+
+[data-form="pair"] input[name="tel"]:focus,
+[data-form="pair"] input[name="tel"]:focus + label {
+  opacity: 1;
 }
