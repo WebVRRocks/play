@@ -1,14 +1,8 @@
-/* global ga, SocketPeer, SpatialNavigation */
+/* global ga, SocketPeer, SpatialNavigation, state */
 (function () {
   var htmlEl = document.documentElement;
   var remoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
   var spatialNavigationPath = 'assets/js/spatial_navigation.js';
-
-  var rootPath = '/';
-  try {
-    rootPath = htmlEl.getAttribute('data-root') || rootPath;
-  } catch (err) {
-  }
 
   var remoteEl = document.querySelector('#remote');
   if (remoteEl) {
@@ -57,7 +51,6 @@
   var dependencies = new Dependencies();
 
   window.addEventListener('load', function () {
-    rootPath = htmlEl.getAttribute('data-root') || rootPath;
     remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || remoteSocketPath;
 
     remoteEl = document.querySelector('#remote');
@@ -78,7 +71,7 @@
       if (!code) {
         code = newPin();
       }
-      var pathWithPin = rootPath + code;
+      var pathWithPin = state.rootPath + code;
       window.history.replaceState(null, null, pathWithPin);
       return code;
     }
@@ -128,23 +121,19 @@
 
       initSpatialNavigation.called = true;
 
-      dependencies.require(rootPath + spatialNavigationPath, function () {
+      dependencies.require(state.rootPath + spatialNavigationPath, function () {
         var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
         if (scenesFormEl) {
-          var sceneEls = scenesFormEl.querySelectorAll('[itemprop="scene"] input[name="scene"]');
+          var sceneEls = scenesFormEl.querySelectorAll('[data-slug-clickable] input[name="scene"]');
           var firstSceneRadioEl = sceneEls[0];
           var lastSceneRadioEl = sceneEls[sceneEls.length - 1];
           if (firstSceneRadioEl && lastSceneRadioEl) {
             var lastSceneSelector = 'input[name="scene"][value="' + lastSceneRadioEl.value + '"]';
-            // var lastSceneSelector = '#' + lastSceneRadioEl.id;
-
             firstSceneRadioEl.setAttribute('data-sn-left', lastSceneSelector);
             firstSceneRadioEl.setAttribute('data-sn-up', lastSceneSelector);
 
             var firstSceneSelector = 'input[name="scene"][value="' + firstSceneRadioEl.value + '"]';
-            // var firstSceneSelector = '#' + firstSceneRadioEl.id;
-
             lastSceneRadioEl.setAttribute('data-sn-right', firstSceneSelector);
             lastSceneRadioEl.setAttribute('data-sn-down', firstSceneSelector);
           }
@@ -158,8 +147,6 @@
         });
 
         SpatialNavigation.makeFocusable();
-
-        SpatialNavigation.focus();
       });
     }
 
@@ -224,6 +211,8 @@
         }
 
         peer.on('data', function (data) {
+          SpatialNavigation.focus();
+
           log('received data: ' + data);
 
           if (data === 'up' || data === 'right' || data === 'down' || data === 'left') {
@@ -235,10 +224,11 @@
             }
             SpatialNavigation.move(data);
           } else if (data === 'select') {
-            document.activeElement.click();
-            var urlEl = document.activeElement.closest('li').querySelector('[itemprop="url"]');
-            if (urlEl) {
-              urlEl.click();
+            var el = document.activeElement;
+            el.click();
+            try {
+              el.closest('[data-slug-clickable]').querySelector('a').click();
+            } catch (err) {
             }
           }
         });

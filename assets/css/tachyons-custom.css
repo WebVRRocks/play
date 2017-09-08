@@ -34,6 +34,18 @@
   width: 64rem;
 }
 
+.mw7-5 {
+  max-width: 57rem;
+}
+
+.apink {
+  color: #ef2d5e;
+}
+
+.bg-apink {
+  background-color: #ef2d5e;
+}
+
 .a11y-green {
   color: #2ecc40;
 }

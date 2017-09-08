@@ -10,11 +10,6 @@ body {
   width: 100%;
 }
 
-html,
-body {
-  position: relative;
-}
-
 html {
   font-size: 14px;
 }
@@ -22,14 +17,6 @@ html {
 body {
   font: 300 1rem/1.2 BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
   line-height: 1.5rem;
-}
-
-.apink {
-  color: #ef2d5e;
-}
-
-.bg-apink {
-  background-color: #ef2d5e;
 }
 
 .code,
@@ -134,18 +121,37 @@ h6 {
 }
 
 [data-page] {
-  display: none;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .15s opacity ease-in;
+  visibility: hidden;
+}
+
+html[data-layout~="play"] body {
+  overflow-y: hidden;
 }
 
 html[data-layout~="play"] [data-page~="play"],
+html[data-layout~="add"] [data-page~="add"],
 html[data-layout~="profile"] [data-page~="profile"],
 html[data-layout~="polyfill"] [data-page~="polyfill"] {
-  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  position: static;
+  transition: .15s opacity ease-in;
+  visibility: visible;
 }
 
 .scene[data-state~="pending"] {
   opacity: 0;
+  pointer-events: none;
   transition: .5s opacity ease-in;
+  visibility: hidden;
 }
 
 .scene[data-state~="loaded"] {
@@ -197,10 +203,6 @@ html[data-layout~="play"] body {
   padding: .75rem .5rem;
 }
 
-[itemprop="details"] {
-  padding-top: 2vh;
-}
-
 [itemprop="image"] {
   background-repeat: no-repeat;
   display: block;
@@ -236,9 +238,13 @@ html[data-layout~="play"] body {
   opacity: 1;
 }
 
+[data-form="scenes"] {
+  overflow-y: hidden;
+}
+
 [data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"] {
   opacity: .5;
-  transition: .15s opacity ease-in-out;
+  transition: .15s opacity ease-in;
 }
 
 [data-form="scenes"][data-scene] .focusable-radio:checked ~ [itemprop="details"] {
@@ -249,4 +255,25 @@ html[data-layout~="play"] body {
 .focusable-link:focus {
   -moz-outline-style: none;
   outline: 0;
+}
+
+.add-button-area [itemprop="image"] {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button-area [itemprop="image"]:before {
+  align-self: center;
+  color: rgba(255,255,255,.5);
+  content: "➕";
+  font-size: 3rem;
+  font-size: calc(1rem + 1.75vw + 1.75vh);
+  transition: .15s transform ease-in;
+  transform: scale(.9);
+}
+
+.add-button-area [itemprop="url"]:hover [itemprop="image"]:before {
+  transform: scale(1.1);
 }
