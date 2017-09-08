@@ -121,20 +121,30 @@ h6 {
 }
 
 [data-page] {
+  bottom: 0;
+  left: 0;
   opacity: 0;
   pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
   transition: .15s opacity ease-in;
   visibility: hidden;
+}
+
+html[data-layout~="play"] body {
+  overflow-y: hidden;
 }
 
 html[data-layout~="play"] [data-page~="play"],
 html[data-layout~="add"] [data-page~="add"],
 html[data-layout~="profile"] [data-page~="profile"],
 html[data-layout~="polyfill"] [data-page~="polyfill"] {
-  opacity: 0;
+  opacity: 1;
   pointer-events: auto;
+  position: static;
   transition: .15s opacity ease-in;
-  visibility: hidden;
+  visibility: visible;
 }
 
 .scene[data-state~="pending"] {
@@ -193,16 +203,6 @@ html[data-layout~="play"] body {
   padding: .75rem .5rem;
 }
 
-[itemprop="details"] {
-  /*margin-top: -2vh;*/
-  background:red;
-  /*padding-bottom: 2vh;*/
-}
-
-[itemprop="url"] {
-  /*padding-bottom: 16px;*/
-}
-
 [itemprop="image"] {
   background-repeat: no-repeat;
   display: block;
@@ -239,12 +239,10 @@ html[data-layout~="play"] body {
 }
 
 [data-form="scenes"] {
-  /*height: calc(16vh + 3.4rem);*/
   overflow-y: hidden;
 }
 
-[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"],
-[data-form="scenes"][data-scene] .add-button-area {
+[data-form="scenes"][data-scene] .focusable-radio ~ [itemprop="details"] {
   opacity: .5;
   transition: .15s opacity ease-in;
 }

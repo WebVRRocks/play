@@ -125,7 +125,7 @@
         var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
         if (scenesFormEl) {
-          var sceneEls = scenesFormEl.querySelectorAll('[itemprop="scene"] input[name="scene"]');
+          var sceneEls = scenesFormEl.querySelectorAll('[data-slug-clickable] input[name="scene"]');
           var firstSceneRadioEl = sceneEls[0];
           var lastSceneRadioEl = sceneEls[sceneEls.length - 1];
           if (firstSceneRadioEl && lastSceneRadioEl) {
@@ -224,10 +224,11 @@
             }
             SpatialNavigation.move(data);
           } else if (data === 'select') {
-            document.activeElement.click();
-            var urlEl = document.activeElement.closest('li').querySelector('[itemprop="url"]');
-            if (urlEl) {
-              urlEl.click();
+            var el = document.activeElement;
+            el.click();
+            try {
+              el.closest('[data-slug-clickable]').querySelector('a').click();
+            } catch (err) {
             }
           }
         });
