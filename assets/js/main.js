@@ -1,7 +1,8 @@
-/* global ga, UAParser, URLSearchParams */
+/* global ga, UAParser, URL, URLSearchParams */
 (function () {
   var state = {
     rootPath: '/',
+    remoteSocketPath: 'https://remote.webvr.rocks/socketpeer/',
     supports: {}
   };
   window.state = state;
@@ -256,6 +257,7 @@
 
   window.addEventListener('load', function () {
     state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
+    state.remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || state.remoteSocketPath;
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
@@ -267,6 +269,50 @@
     // sceneEl.addEventListener('load', function () {
     //   sceneEl.setAttribute('data-state', 'loaded');
     // });
+
+    var pairFormEl = document.querySelector('form[data-form="pair"]');
+    if (pairFormEl) {
+      var telEl = pairFormEl.querySelector('input[name="tel"]');
+      pairFormEl.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        var remoteCode = null;
+        try {
+          remoteCode = window.localStorage.remote_code;
+        } catch (err) {
+        }
+
+        if (!remoteCode) {
+          throw 'No remote code';
+        }
+
+        var remoteSocketOrigin = null;
+        if ('URL' in window) {
+          remoteSocketOrigin = new URL(state.remoteSocketPath).origin;
+        }
+        if (!remoteSocketOrigin) {
+          throw 'No remote socket';
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', remoteSocketOrigin + '/sms');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+          to: telEl.value,
+          body: 'Play WebVR now! ' + window.location.origin + '/' + remoteCode
+        }));
+      });
+      pairFormEl.addEventListener('input', function () {
+        pairFormEl.setAttribute('data-focused', 'true');
+      });
+      pairFormEl.addEventListener('input', function () {
+        pairFormEl.setAttribute('data-focused', 'false');
+      });
+      function focusPairTel () {
+        var telEl = pairFormEl.querySelector('tel');
+      }
+    }
 
     state.path = getPath();
     state.routeData = {};
@@ -410,6 +456,16 @@
         htmlEl.setAttribute('data-layout', 'play');
       }
       htmlEl.setAttribute('data-path', path);
+
+      var urlFieldEl = htmlEl.querySelector('[data-form="add"] [name="url"]');
+
+      if (urlFieldEl) {
+        if (pathAdd) {
+          urlFieldEl.focus();
+        } else {
+          urlFieldEl.blur();
+        }
+      }
 
       if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
         return false;
