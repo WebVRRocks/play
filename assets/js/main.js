@@ -1,11 +1,29 @@
-/* global ga, UAParser */
+/* global ga, UAParser, URL, URLSearchParams */
 (function () {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js',).then(function (reg) {
-      console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
-    }).catch(function (err) {
-      console.log('Service Worker registration failed:', err);
-    });
+  var state = {
+    rootPath: '/',
+    remoteSocketPath: 'https://remote.webvr.rocks/socketpeer/',
+    supports: {}
+  };
+  window.state = state;
+  var htmlEl = document.documentElement;
+
+  try {
+    state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
+  } catch (err) {
+  }
+
+  // Register a Service Worker, if supported by the browser.
+  if ('URLSearchParams' in window) {
+    var qs = new URLSearchParams(window.location.search.substr(1));
+    var swEnabled = qs.get('sw') !== '0';
+    if (swEnabled && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register(state.rootPath + 'sw.js').then(function (reg) {
+        console.log('Service Worker registration succeeded (scope: %s)', reg.scope);
+      }).catch(function (err) {
+        console.error('Service Worker registration failed:', err);
+      });
+    }
   }
 
   // Adapted from source: https://github.com/feross/arch/blob/master/browser.js
@@ -74,10 +92,6 @@
 
   var osCompatValueEl;
 
-  var supports = {};
-
-  var l10nStrings = {};
-
   function parseProfile () {
     osValueEl = document.querySelector('#os_value');
     browserValueEl = document.querySelector('#browser_value');
@@ -87,20 +101,22 @@
 
     osCompatValueEl = document.querySelector('#os_compat_value > span');
 
-    supports.touch = 'ontouchstart' in window;
-    supports.mobile = isMobile();
-    supports.tablet = isTablet();
-    supports.webvr = !!navigator.getVRDisplays;
-    supports.desktop = !supports.mobile && !supports.tablet;
+    state.supports.touch = 'ontouchstart' in window;
+    state.supports.mobile = isMobile();
+    state.supports.tablet = isTablet();
+    state.supports.desktop = !state.supports.mobile && !state.supports.tablet;
 
-    document.documentElement.setAttribute('data-desktop', supports.desktop);
-    document.documentElement.setAttribute('data-tablet', supports.tablet);
-    document.documentElement.setAttribute('data-mobile', supports.mobile);
-    document.documentElement.setAttribute('data-platform', supports.touch);
-    document.documentElement.setAttribute('data-supports-touch', supports.touch);
-    document.documentElement.setAttribute('data-supports-webvr-positional', supports.webvrPositional);
-    document.documentElement.setAttribute('data-supports-webvr', supports.webvr);
-    document.documentElement.setAttribute('data-supports-webvr-disconnected', supports.webvrPositional);
+    state.supports.webvr = !!navigator.getVRDisplays;
+    state.supports.webvrPositional = hasPositionalTracking(state.supports.desktop, state.supports.mobile);
+
+    htmlEl.setAttribute('data-desktop', state.supports.desktop);
+    htmlEl.setAttribute('data-tablet', state.supports.tablet);
+    htmlEl.setAttribute('data-mobile', state.supports.mobile);
+    htmlEl.setAttribute('data-platform', state.supports.touch);
+    htmlEl.setAttribute('data-supports-touch', state.supports.touch);
+    htmlEl.setAttribute('data-supports-webvr-positional', state.supports.webvrPositional);
+    htmlEl.setAttribute('data-supports-webvr', state.supports.webvr);
+    htmlEl.setAttribute('data-supports-webvr-disconnected', state.supports.webvrPositional);
   }
 
   function renderProfile () {
@@ -163,8 +179,9 @@
     }
 
     if (deviceValueEl) {
+      var deviceStr;
       if (ua.device.vendor || ua.device.model || ua.device.type) {
-        var deviceStr = JSON.stringify(ua.device);
+        deviceStr = JSON.stringify(ua.device);
         deviceValueEl.innerHTML = '&nbsp;';
         deviceValueEl.setAttribute('data-l10n-args', deviceStr);
       } else {
@@ -172,14 +189,14 @@
           ua.device.vendor = 'Apple';
           ua.device.model = 'Mac';
           ua.device.type = 'Intel';
-          var deviceStr = JSON.stringify(ua.device);
+          deviceStr = JSON.stringify(ua.device);
           deviceValueEl.innerHTML = '&nbsp;';
           deviceValueEl.setAttribute('data-l10n-args', deviceStr);
         } else {
           deviceValueEl.removeAttribute('data-l10n-args');
-          if (supports.tablet) {
+          if (state.supports.tablet) {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_tablet');
-          } else if (supports.mobile) {
+          } else if (state.supports.mobile) {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_mobile');
           } else {
             deviceValueEl.setAttribute('data-l10n-id', 'device_value_type_desktop');
@@ -189,8 +206,9 @@
     }
 
     if (cpuValueEl) {
+      var cpuStr;
       if (ua.cpu.architecture) {
-        var cpuStr = JSON.stringify(ua.cpu);
+        cpuStr = JSON.stringify(ua.cpu);
         cpuValueEl.innerHTML = '&nbsp;';
         if (ua.cpu.architecture === 'x64') {
           cpuValueEl.setAttribute('data-l10n-id', 'cpu_value_64_bit');
@@ -221,16 +239,16 @@
     }
   }
 
-  function getPath (href) {
-    var pathname = href || window.location.pathname;
-    if (pathname === '/' || pathname === '/index' || pathname === '/index.html') {
-      return '/';
-    }
-    return pathname.replace(/\/+$/g, '').replace(/.html$/g, '');
-  }
-
   var pageTitles = {};
   var startUrls = {};
+
+  function getPath (href) {
+    var pathname = href || window.location.pathname;
+    if (pathname === state.rootPath || pathname === '/' || pathname === '/index' || pathname === '/index.html') {
+      return state.rootPath;
+    }
+    return pathname.replace(/\.html$/i, '').replace(/\/+/g, '/');
+  }
 
   var sceneEl = document.querySelector('#scene');
   if (sceneEl) {
@@ -238,61 +256,159 @@
   }
 
   window.addEventListener('load', function () {
-    sceneEl = document.querySelector('#scene');
+    state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
+    state.remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || state.remoteSocketPath;
+
+    sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
     sceneEl.setAttribute('data-state', 'pending');
     setTimeout(function () {
       sceneEl.setAttribute('data-state', 'loaded');
     }, 2000);
-    sceneEl.addEventListener('load', function () {
-      sceneEl.setAttribute('data-state', 'loaded');
-    });
+    // TODO: Fix this such that the child `<iframe>` sends a `postMessage` event to this parent window.
+    // sceneEl.addEventListener('load', function () {
+    //   sceneEl.setAttribute('data-state', 'loaded');
+    // });
+
+    var pairFormEl = document.querySelector('form[data-form="pair"]');
+    if (pairFormEl) {
+      var telEl = pairFormEl.querySelector('input[name="tel"]');
+      pairFormEl.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        var remoteCode = null;
+        try {
+          remoteCode = window.localStorage.remote_code;
+        } catch (err) {
+        }
+
+        if (!remoteCode) {
+          throw 'No remote code';
+        }
+
+        var remoteSocketOrigin = null;
+        if ('URL' in window) {
+          remoteSocketOrigin = new URL(state.remoteSocketPath).origin;
+        }
+        if (!remoteSocketOrigin) {
+          throw 'No remote socket';
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', remoteSocketOrigin + '/sms');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+          to: telEl.value,
+          body: 'Play WebVR now! ' + window.location.origin + '/' + remoteCode
+        }));
+      });
+      pairFormEl.addEventListener('input', function () {
+        pairFormEl.setAttribute('data-focused', 'true');
+      });
+      pairFormEl.addEventListener('input', function () {
+        pairFormEl.setAttribute('data-focused', 'false');
+      });
+      function focusPairTel () {
+        var telEl = pairFormEl.querySelector('tel');
+      }
+    }
+
+    state.path = getPath();
+    state.routeData = {};
 
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
+    var cssSelectorsToShow = [
+      'html[data-layout~="play"] [data-slug-clickable][data-slug="play"]',
+      'html[data-layout~="add"] [data-slug-clickable][data-slug="add"]',
+      'html[data-layout~="profile"] [data-slug="profile"]',
+      'html[data-layout~="polyfill_v2"] [data-slug="profile"]'
+    ];
+    var cssSelectorsToHighlight = [];
 
-    Array.prototype.forEach.call(document.querySelectorAll('[data-slug]'), function (sceneItemEl) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-slug-clickable]'), function (sceneItemEl) {
       var slug = sceneItemEl.getAttribute('data-slug');
-      pageTitles['/' + slug] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
-      startUrls['/' + slug] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
-      cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-page~="play"] { display: block; }';
-      cssDynamicRulesEl.cssText += 'html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] { box-shadow: 0 0 10px rgba(255,255,255,.5); opacity: 1; }';
+      var slugPath = state.rootPath + slug;
+      if (slugPath === state.path) {
+        state.routeData.type = 'scene';
+        state.routeData.slug = slug;
+      }
+      pageTitles[slugPath] = sceneItemEl.querySelector('[itemprop="name"]').textContent;
+      startUrls[slugPath] = sceneItemEl.querySelector('[itemprop="url"]').getAttribute('href');
+
+      cssSelectorsToShow.push('html[data-path^="/' + slug + '"] [data-page~="play"]');
+      cssSelectorsToHighlight.push('html[data-path^="/' + slug + '"] [data-slug="' + slug + '"] [itemprop="image"]');
     });
 
+    cssDynamicRulesEl.innerHTML = cssSelectorsToShow.join(',\n') + ' {\n' +
+      '  pointer-events: auto;\n' +
+      '  position: static;\n' +
+      '  opacity: 1;\n' +
+      '  visibility: visible;\n' +
+      '}\n\n' +
+      cssSelectorsToHighlight.join(',\n') + ' {\n' +
+      '  box-shadow: 0 0 10px rgba(255,255,255,.5);\n' +
+      '  opacity: 1;\n' +
+      '}\n';
+
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
-    pageTitles['/'] = titleEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-path="/play"] [data-slug="play"] { opacity: 1; }';
+    pageTitles[state.rootPath] = titleEl.textContent;
+
+    var loadANewSiteEl = document.querySelector('h2[data-l10n-id="load_a_new_site"]');
+    pageTitles[state.rootPath + 'add'] = loadANewSiteEl.textContent;
 
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
-    pageTitles['/profile'] = profileHeadingEl.textContent;
-    cssDynamicRulesEl.cssText += 'html[data-path="/profile"] [data-slug="profile"] { opacity: 1; }';
+    pageTitles[state.rootPath + 'profile'] = profileHeadingEl.textContent;
 
-    var redirectPath = null;
-    try {
-      redirectPath = window.sessionStorage.redirect;
-      delete window.sessionStorage.redirect;
-    } catch (err) {
-    }
-    if (redirectPath) {
-      if (redirectPath in pageTitles && redirectPath !== window.location.href) {
-        history.replaceState(null, null, redirectPath);
-        routeUpdate(redirectPath, false);
-      }
-    } else {
-      var path = getPath();
-      routeUpdate(path, false);
-    }
-
-    parseProfile();
-
-    renderProfile();
+    var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
+    pageTitles[state.rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
 
     var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
-    var scenesEl = document.querySelector('[data-section~="scenes"]');
-    scenesEl.addEventListener('click', function (evt) {
+    function clickSceneEl (elOrSlug, navigate) {
+      var el = elOrSlug;
+      var slug = elOrSlug;
+
+      if (typeof elOrSlug === 'string') {
+        el = scenesFormEl.querySelector('[itemprop="scene"][data-slug="' + elOrSlug + '"]');
+      }
+      if (!el) {
+        throw 'An element for slug "' + slug + '" could not be found for `clickSceneEl`';
+      }
+
+      if (typeof slug !== 'string') {
+        slug = el.getAttribute('data-slug');
+      }
+      if (!slug) {
+        throw 'A slug is required for `clickSceneEl`';
+      }
+
+      var selectedSceneEl = scenesFormEl.querySelector('input[name="scene"]:checked');
+      if (selectedSceneEl) {
+        selectedSceneEl.checked = false;
+      }
+
+      var newSelectedSceneEl = el.querySelector('input[name="scene"]');
+      if (newSelectedSceneEl) {
+        newSelectedSceneEl.checked = true;
+      }
+
+      scenesFormEl.setAttribute('data-scene', slug);
+
+      if (navigate) {
+        var pageUrl = state.rootPath + slug;
+        routeUpdate(state, pageUrl, true, {type: 'scene', slug: slug});
+      }
+
+      return slug;
+    }
+
+    scenesFormEl.addEventListener('click', function (evt) {
       if (!evt.target.closest || evt.shiftKey || evt.altKey || evt.ctrlKey) {
         return;
       }
+
+      console.error('scene click', evt.target);
 
       var linkEl = evt.target.closest('[itemprop="url"]');
       if (!linkEl) {
@@ -306,112 +422,115 @@
       evt.preventDefault();
       evt.stopPropagation();
 
-      var slug = sceneItemEl.getAttribute('data-slug');
-
-      var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
-      if (selectedSceneEl) {
-        selectedSceneEl.checked = false;
-      }
-
-      var newSelectedSceneEl = sceneItemEl.querySelector('input[name="scene"]');
-      if (newSelectedSceneEl) {
-        newSelectedSceneEl.checked = true;
-        newSelectedSceneEl.focus();
-      }
-
-      scenesFormEl.setAttribute('data-scene', slug);
-
-      var pageUrl = '/' + slug;
-      routeUpdate(pageUrl, true, {slug: slug});
+      clickSceneEl(sceneItemEl, true);
     });
 
     if (scenesFormEl) {
+      var selectedSceneEl;
+
       scenesFormEl.addEventListener('submit', function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
-        var selectedSceneEl = document.querySelector('input[name="scene"]:checked');
+        selectedSceneEl = scenesFormEl.querySelector('input[name="scene"]:checked');
         if (selectedSceneEl) {
           var slug = selectedSceneEl.value;
 
-          var pageUrl = '/' + slug;
-          routeUpdate(pageUrl, true, {slug: slug});
-
-          scenesFormEl.setAttribute('data-scene', slug);
+          clickSceneEl(slug, false);
         }
       });
     }
+
+    function routeUpdate (state, href, push, data) {
+      var path = getPath(href);
+
+      var pathAdd = path === state.rootPath + 'add';
+
+      if (path === state.rootPath + 'profile') {
+        htmlEl.setAttribute('data-layout', 'profile');
+      } else if (path.indexOf(state.rootPath + 'polyfill') === 0) {
+        htmlEl.setAttribute('data-layout', 'polyfill');
+      } else if (pathAdd) {
+        htmlEl.setAttribute('data-layout', 'play add');
+      } else {
+        htmlEl.setAttribute('data-layout', 'play');
+      }
+      htmlEl.setAttribute('data-path', path);
+
+      var urlFieldEl = htmlEl.querySelector('[data-form="add"] [name="url"]');
+
+      if (urlFieldEl) {
+        if (pathAdd) {
+          urlFieldEl.focus();
+        } else {
+          urlFieldEl.blur();
+        }
+      }
+
+      if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
+        return false;
+      }
+
+      var titleEl = document.querySelector('title');
+      var title = pageTitles[path];
+
+      if (path !== state.rootPath && title) {
+        titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
+        titleEl.setAttribute('data-l10n-id', 'title_page');
+      } else {
+        titleEl.removeAttribute('data-l10n-args');
+        titleEl.setAttribute('data-l10n-id', 'title_default');
+      }
+
+      if (data && data.type === 'scene' && data.slug) {
+        clickSceneEl(data.slug, false);
+      }
+
+      if (!(href in startUrls) || pathAdd) {
+        sceneEl.setAttribute('src', '');
+      } else {
+        sceneEl.setAttribute('src', startUrls[path]);
+      }
+
+      // TODO: Handle `popState` navigation.
+      if (push !== false) {
+        var state = {};
+        state.path = path;
+        state.title = title;
+        if (href in startUrls) {
+          state.startUrl = startUrls[href];
+        }
+        window.history.pushState(state, title, path);
+
+        if ('ga' in window) {
+          ga('set', {
+            page: window.location.pathname,
+            title: title
+          });
+          ga('send', 'pageview');
+        }
+      }
+
+      return true;
+    }
+
+    routeUpdate(state, state.path, false, state.routeData);
+
+    parseProfile();
+
+    renderProfile();
   });
-
-  function routeUpdate (href, push, data) {
-    var path = getPath(href);
-
-    if (path === '/profile') {
-      document.documentElement.setAttribute('data-layout', 'profile');
-    } else {
-      document.documentElement.setAttribute('data-layout', 'play');
-    }
-    document.documentElement.setAttribute('data-path', path);
-
-    if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
-      return false;
-    }
-
-    var titleEl = document.querySelector('title');
-    var title = pageTitles[path];
-
-    if (path !== '/' && title) {
-      titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
-      titleEl.setAttribute('data-l10n-id', 'title_page');
-    } else {
-      titleEl.removeAttribute('data-l10n-args');
-      titleEl.setAttribute('data-l10n-id', 'title_default');
-    }
-
-    if (href in startUrls) {
-      sceneEl.setAttribute('src', startUrls[path]);
-    }
-
-    if (push !== false) {
-      var state = {};
-      state.path = path;
-      state.title = title;
-      if (href in startUrls) {
-        state.startUrl = startUrls[href];
-      }
-      window.history.pushState(state, title, path);
-
-      if ('ga' in window) {
-        ga('set', {
-          page: window.location.pathname,
-          title: title
-        });
-        ga('send', 'pageview');
-      }
-    }
-
-    return true;
-  }
-
-  // document.addEventListener('click', function (evt) {
-  //   if (evt.target.tagName === 'A' &&
-  //       evt.target.origin === window.location.origin) {
-  //     evt.preventDefault();
-  //     if (evt.target.href !== window.location.href) {
-  //       routeUpdate(e.target.href, true);
-  //     }
-  //   }
-  // }, true);
 
   /**
    * Check for positional tracking.
    */
-  function hasPositionalTracking (isMobile) {
+  function hasPositionalTracking (isDesktop, isMobile, displays) {
     var supportsPositional = isMobile;
     if (supportsPositional) {
       return true;
     }
-    displays.connected.concat(displays.presenting).forEach(function (display) {
+    displays = displays || [];
+    displays.forEach(function (display) {
       if (display && display.capabilities && display.capabilities.hasPosition) {
         supportsPositional = true;
       }
@@ -419,9 +538,7 @@
     if (supportsPositional) {
       return true;
     }
-    if (!supports.desktop && ('ondevicemotion' in window)) {
-      return true;
-    }
+    return !isDesktop && ('ondevicemotion' in window);
   }
 
   /**
@@ -461,121 +578,4 @@
       return _isMobile || isSamsungGearVR();
     };
   })();
-
-    // var displays = {
-    //   available: [],
-    //   connected: [],
-    //   presenting: []
-    // };
-    //
-    // var headsets = {
-    //   htc_vive: {
-    //     name: 'HTC Vive',
-    //     slug: 'htc_vive'
-    //   },
-    //   oculus_rift: {
-    //     name: 'Oculus Rift',
-    //     slug: 'oculus_rift'
-    //   },
-    //   google_daydream: {
-    //     name: 'Google Daydream',
-    //     slug: 'google_daydream'
-    //   },
-    //   samsung_gear_vr: {
-    //     name: 'Samsung Gear VR',
-    //     slug: 'samsung_gear_vr'
-    //   },
-    //   google_cardboard: {
-    //     name: 'Google Cardboard',
-    //     slug: 'google_cardboard'
-    //   },
-    //   osvr_hdk2: {
-    //     name: 'OSVR HDK2',
-    //     slug: 'osvr_hdk2'
-    //   },
-    //   none: {
-    //     name: '(None)',
-    //     slug: 'none'
-    //   }
-    // };
-    //
-    // var filteredHeadsets = {};
-    // Object.keys(headsets).forEach(function (headsetKey) {
-    //   filteredHeadsets[headsetKey] = '';
-    // });
-    //
-    // function getDisplaySlug (display) {
-    //   var displayName = (display.displayName || display.name || '').toLowerCase();
-    //   if (displayName.indexOf('oculus') > -1) {
-    //     return headsets.oculus_rift.slug;
-    //   } else if (displayName.indexOf('openvr') > -1 || displayName.indexOf('vive') > -1) {
-    //     return headsets.htc_vive.slug;
-    //   } else if (displayName.indexOf('gear') > -1) {
-    //     return headsets.samsung_gear_vr.slug;
-    //   } else if (displayName.indexOf('daydream') > -1) {
-    //     return headsets.google_daydream.slug;
-    //   } else if (displayName.indexOf('osvr') > -1) {
-    //     return headsets.osvr_hdk2.slug;
-    //   }
-    //   return supports.webvrPositional ? headsets.google_cardboard.slug : headsets.none.slug;
-    // }
-    //
-    // function addOrUpdateDisplay (display, displayGroupType) {
-    //   var displaysList = displays[displayGroupType];
-    //   if (!displaysList) {
-    //     return;
-    //   }
-    //   var idx = displaysList.indexOf(display.displayId);
-    //   if (idx > -1) {
-    //     displaysList[idx] = display;
-    //     headsets[getDisplaySlug(display)][displayGroupType] = true;
-    //     return;
-    //   }
-    //   displaysList.push(display);
-    //   headsets[getDisplaySlug(display)][displayGroupType] = true;
-    // }
-    //
-    // function removeDisplay (display, displayGroupType) {
-    //   var displaysList = displays[displayGroupType];
-    //   if (!displaysList) {
-    //     return;
-    //   }
-    //   var idx = displaysList.indexOf(display.displayId);
-    //   if (idx > -1) {
-    //     displaysList.splice(idx, 1);
-    //     headsets[getDisplaySlug(display)][displayGroupType] = true;
-    //   }
-    // }
-    //
-    // if (supports.webvr) {
-    //   navigator.getVRDisplays().then(function (displays) {
-    //     displays.forEach(function (display) {
-    //       if (display.isConnected) {
-    //         addOrUpdateDisplay(display, 'available');
-    //       } else {
-    //         removeDisplay(display, 'available');
-    //         addOrUpdateDisplay(display, 'connected');
-    //       }
-    //     });
-    //     supports.webvrPositional = hasPositionalTracking(isMobile);
-    //   });
-    //
-    //   window.addEventListener('vrdisplayconnect', function (evt) {
-    //     addOrUpdateDisplay(evt.display, 'available');
-    //     addOrUpdateDisplay(evt.display, 'connected');
-    //   });
-    //
-    //   window.addEventListener('vrdisplaydisconnect', function (evt) {
-    //     addOrUpdateDisplay(evt.display, 'available');
-    //     addOrUpdateDisplay(evt.display, 'disconnected');
-    //   });
-    //
-    //   window.addEventListener('vrdisplaypresentchange', function (evt) {
-    //     if (evt.isPresenting) {
-    //       addOrUpdateDisplay(evt.display, 'presenting');
-    //     } else {
-    //       removeDisplay(evt.display, 'presenting');
-    //     }
-    //   });
-    // }
 })();

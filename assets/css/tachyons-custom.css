@@ -1,3 +1,7 @@
+.vh-72 {
+  height: 72vh;
+}
+
 .h0 {
   height: 0;
 }
@@ -34,6 +38,18 @@
   width: 64rem;
 }
 
+.mw7-5 {
+  max-width: 57rem;
+}
+
+.apink {
+  color: #ef2d5e;
+}
+
+.bg-apink {
+  background-color: #ef2d5e;
+}
+
 .a11y-green {
   color: #2ecc40;
 }
@@ -60,4 +76,27 @@
 
 .b--a11y-red {
   border-color: #ff4136;
+}
+
+.font-face-inherit {
+  font-family: inherit;
+}
+
+.font-style-inherit {
+  font-style: inherit;
+}
+
+.glow,
+.glow:focus,
+.glow:hover {
+  -webkit-transition: opacity .15s ease-in, color .15s ease-in;
+  transition: opacity .15s ease-in, color .15s ease-in;
+}
+
+.hover-b--near-black:hover {
+  border-color: #999;
+}
+
+form[data-focusued="true"] {
+  opacity: 1;
 }
