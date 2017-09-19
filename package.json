@@ -22,7 +22,8 @@
   "dependencies": {
     "connect-body-rewrite": "0.0.4",
     "cross-env": "^5.0.1",
-    "http-server": "^0.10.0"
+    "http-server": "^0.10.0",
+    "internal-ip": "^2.0.2"
   },
   "devDependencies": {
     "ghpages": "0.0.10",
