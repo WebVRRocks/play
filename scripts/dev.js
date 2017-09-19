@@ -2,22 +2,32 @@ const http = require('http');
 const https = require('https');
 const urlParse = require('url').parse;
 
+const internalIp = require('internal-ip');
 const liveServer = require('live-server');
 
 const spaRoutes = require('./routes.json');
 
+const serverHost = process.env.WWW_HOST || process.env.HOST || '0.0.0.0';
+const serverPort = parseInt(process.env.REMOTE_PORT || '8080', 10);
+const serverHttps = process.env.WWW_HTTPS === '1';
+
+const getServerPath = (https, host, port) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}/`;
+let serverPath;
+
+const remoteHttps = process.env.REMOTE_HTTPS === '1' || process.env.REMOTE_HTTPS === 'true';
 const remoteHost = process.env.REMOTE_HOST || '0.0.0.0';
 const remotePort = parseInt(process.env.REMOTE_PORT || '3000', 10);
-const remoteHttps = process.env.REMOTE_HTTPS === '1' || process.env.REMOTE_HTTPS === 'true';
 
 const remoteSocketPathname = '/socketpeer/';
-const remoteSocketPath = `http${remoteHttps ? 's' : ''}://${remoteHost}:${remotePort}${remoteSocketPathname}`;
 const prodRemoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
+
+const getRemoteSocketPath = (https, host, port, pathname) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}${remoteSocketPathname || getRemoteSocketPath}`;
+let remoteSocketPath;
 
 let settings = {
   root: process.env.WWW_ROOT || process.env.ROOT || process.cwd(),
-  host: process.env.WWW_HOST || process.env.HOST || '0.0.0.0',
-  port: process.env.WWW_PORT || process.env.PORT || 8080,
+  host: serverHost,
+  port: serverPort,
   open: (process.env.WWW_OPEN || process.env.OPEN) === 'true',
   ignore: process.env.WWW_IGNORE || process.env.IGNORE || '.git,node_modules',
   logLevel: parseInt(process.env.WWW_LOGS || process.env.LOGS || '2', 10),  // 0 = errors only; 1 = some errors; 2 = many errors.
@@ -45,23 +55,39 @@ function redirectMiddleware (req, res, next) {
   next();
 }
 
-const rewriteRemoteSocketPathMiddleware = require('connect-body-rewrite')({
-  accept: function (res) {
+const rewriteServerPathMiddleware = serverHost => require('connect-body-rewrite')({
+  accept: res => {
     return res.getHeader('content-type').match(/text\/html/i);
   },
-  rewrite: function (body) {
+  rewrite: body => {
+    return body.replace(/data-server-path=.*/, `data-server-path="${serverPath}"`);
+  }
+});
+
+const rewriteRemoteSocketPathMiddleware = remoteSocketPath => require('connect-body-rewrite')({
+  accept: res => {
+    return res.getHeader('content-type').match(/text\/html/i);
+  },
+  rewrite: body => {
     return body.replace(/data-remote-socket-path=.*/, `data-remote-socket-path="${remoteSocketPath}"`);
   }
 });
 
 function startServer (socketpeerRunningLocally) {
-  if (socketpeerRunningLocally) {
-    console.log(`Using detected local Remote Control server: ${remoteSocketPath}`);
-    settings.middleware.push(rewriteRemoteSocketPathMiddleware);
-  } else {
-    console.log(`Falling back to hosted Remote Control server: ${prodRemoteSocketPath}`);
-  }
-  liveServer.start(settings);
+  return internalIp.v4().then(localIP => {
+    serverPath = getServerPath(serverHttps, localIP, settings.port);
+    settings.middleware.push(rewriteServerPathMiddleware(remoteSocketPath));
+
+    if (socketpeerRunningLocally) {
+      remoteSocketPath = getRemoteSocketPath(remoteHttps, remoteHost, remotePort);
+      console.log(`Using detected local Remote Control server: ${remoteSocketPath}`);
+      settings.middleware.push(rewriteRemoteSocketPathMiddleware(remoteSocketPath));
+    } else {
+      console.log(`Falling back to hosted Remote Control server: ${prodRemoteSocketPath}`);
+    }
+
+    liveServer.start(settings);
+  });
 }
 
 let socketpeerRunningLocally = false;
