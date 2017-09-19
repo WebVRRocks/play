@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const urlParse = require('url').parse;
 
+const connectBodyRewrite = require('connect-body-rewrite');
 const internalIp = require('internal-ip');
 const liveServer = require('live-server');
 
@@ -55,7 +56,7 @@ function redirectMiddleware (req, res, next) {
   next();
 }
 
-const rewriteServerPathMiddleware = serverHost => require('connect-body-rewrite')({
+const rewriteServerPathMiddleware = serverHost => connectBodyRewrite({
   accept: res => {
     return res.getHeader('content-type').match(/text\/html/i);
   },
@@ -64,7 +65,7 @@ const rewriteServerPathMiddleware = serverHost => require('connect-body-rewrite'
   }
 });
 
-const rewriteRemoteSocketPathMiddleware = remoteSocketPath => require('connect-body-rewrite')({
+const rewriteRemoteSocketPathMiddleware = remoteSocketPath => connectBodyRewrite({
   accept: res => {
     return res.getHeader('content-type').match(/text\/html/i);
   },
