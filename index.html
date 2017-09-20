@@ -35,18 +35,24 @@
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
       <section id="welcome" data-section="welcome" class="welcome bg-near-white vh-72 overflow-hidden">
-        <div class="wrap pa3 pv4 relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
+        <div class="welcome-wrap wrap pa3 pv4 relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
           <div class="content relative z-3 w-50">
-            <h2 class="f2 pb3 lh-solid" data-l10n-id="welcome_to_webvr">
-              <span class="db">Welcome to WebVR</span>
-            </h2>
+            <h2 class="f2 pb3 lh-solid" data-l10n-id="welcome_to_webvr">Welcome to WebVR</h2>
             <form action="/pair" method="get" class="flex flex-column" data-form="pair">
-              <input type="tel" name="tel" id="tel" class="db pa2 order-1 o-0 glow mw6" placeholder="Enter your phone number"> <label for="tel" class="db f6 o-0 pb1 silver">Phone number</label>
+              <fieldset class="pa0 ma0 bw0 mw6" data-slug="pair">
+                <legend class="dn" data-l10n-id="pair_your_phone">Pair your phone</legend>
+                <label class="wrap f3 db pb1 silver">
+                  <div class="form-label-text f6">
+                    Phone number
+                  </div>
+                  <input type="text" name="tel" id="tel" class="relative z-3 db pa2 w-100 family-inherit color-inherit" placeholder="Enter your phone number">
+                </label>
+              </fieldset>
             </form>
           </div>
-          <aside class="aside f2 pb3 lh-solid flex items-end justify-end h-100 relative z-3 w-50" data-section="aside">
-            <a href="/pair" id="pair-button" class="pair-button db self-end f5 link glow">
-              <span class="dib gray hover-near-black bb b--transparent hover-b--near-black pb1">Pair your phone as a remote control</span>
+          <aside class="aside f2 pb3 lh-solid flex items-end justify-end h-100 relative z-3" data-section="aside">
+            <a href="/pair" id="pair-button" class="pair-button db self-end f5 link glow hover-near-black">
+              <span class="dib bb b--transparent hover-b--gray pb1" data-l10n-id="remote_control_with_your_phone">Remote control with your phone</span>
             </a>
           </aside>
           <!--
@@ -133,7 +139,7 @@
           <fieldset class="pa0 ma0 bw0">
             <legend class="dn">Submit a site URL</legend>
             <div class="wrap pt4 f3">
-              <input type="url" name="url" class="font-face-inherit font-family-inherit near-black pa3 w-100" placeholder="https://example.com/">
+              <input type="url" name="url" class="family-inherit near-black pa3 w-100" placeholder="https://example.com/">
             </div>
           </fieldset>
         </form>

@@ -121,7 +121,8 @@ h6 {
 }
 
 [data-page],
-/*iframe*/.scene ~ [data-section="welcome"] {
+/*iframe*/.scene ~ [data-section="welcome"],
+html:not([data-layout~="pair"]) [data-slug="pair"] {
   bottom: 0;
   left: 0;
   opacity: 0;
@@ -137,12 +138,12 @@ html[data-layout~="play"] body {
   overflow-y: hidden;
 }
 
-html[data-path~="/"] /*iframe*/.scene[src=""] ~ [data-section="welcome"],
-html[data-path~="/play"] /*iframe*/.scene[src=""] ~ [data-section="welcome"],
 html[data-layout~="play"] [data-page~="play"],
 html[data-layout~="add"] [data-page~="add"],
 html[data-layout~="profile"] [data-page~="profile"],
-html[data-layout~="polyfill"] [data-page~="polyfill"] {
+html[data-layout~="polyfill"] [data-page~="polyfill"],
+html[data-layout~="play"]:not([data-layout~="add"]) /*iframe*/.scene[src=""] ~ [data-section="welcome"],
+html[data-layout~="pair"] [data-slug="pair"] {
   opacity: 1;
   pointer-events: auto;
   position: static;
@@ -281,7 +282,7 @@ html[data-layout~="play"] body {
   transform: scale(1.1);
 }
 
-[data-section="welcome"] .wrap:before {
+.welcome-wrap:before {
   background: url(../img/vr-bg.png) 100% 100% no-repeat;
   content: "";
   height: 90vh;
@@ -298,18 +299,16 @@ html[data-layout~="play"] body {
 
 .pair-button:before {
   background: url(../img/mobile_remote.svg) no-repeat;
+  background-size: auto 20px;
   content: "";
   display: inline-block;
   height: 20px;
+  margin-right: .25rem;
+  opacity: .5;
+  transition: opacity .15s ease-in;
   width: 12px;
 }
 
-[data-form="pair"] input[name="tel"],
-[data-form="pair"] input[name="tel"] + label {
-  transition: .15s opacity ease-in-out;
-}
-
-[data-form="pair"] input[name="tel"]:focus,
-[data-form="pair"] input[name="tel"]:focus + label {
+.pair-button:hover:before {
   opacity: 1;
 }
