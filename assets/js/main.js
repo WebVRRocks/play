@@ -294,6 +294,11 @@
           remoteSocketOrigin = new URL(state.remoteSocketPath).origin;
         }
         if (!remoteSocketOrigin) {
+          var a = document.createElement('a');
+          a.href = state.remoteSocketPath;
+          remoteSocketOrigin = state.remoteSocketPath.origin;
+        }
+        if (!remoteSocketOrigin) {
           throw 'No remote socket';
         }
 
@@ -311,9 +316,6 @@
       pairFormEl.addEventListener('input', function () {
         pairFormEl.setAttribute('data-focused', 'false');
       });
-      function focusPairTel () {
-        var telEl = pairFormEl.querySelector('tel');
-      }
     }
 
     state.path = getPath();
@@ -322,6 +324,7 @@
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
     var cssSelectorsToShow = [
       'html[data-layout~="play"] [data-slug-clickable][data-slug="play"]',
+      'html[data-layout~="pair"] [data-slug="pair"]',
       'html[data-layout~="add"] [data-slug-clickable][data-slug="add"]',
       'html[data-layout~="profile"] [data-slug="profile"]',
       'html[data-layout~="polyfill_v2"] [data-slug="profile"]'
@@ -359,11 +362,32 @@
     var loadANewSiteEl = document.querySelector('h2[data-l10n-id="load_a_new_site"]');
     pageTitles[state.rootPath + 'add'] = loadANewSiteEl.textContent;
 
+    var pairYourPhoneHeadingEl = document.querySelector('[data-l10n-id="pair_your_phone"]');
+    pageTitles[state.rootPath + 'pair'] = pairYourPhoneHeadingEl.textContent;
+
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
     pageTitles[state.rootPath + 'profile'] = profileHeadingEl.textContent;
 
     var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
     pageTitles[state.rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
+
+    var pairButtonEl = document.querySelector('#pair-button');
+    if (pairButtonEl) {
+      pairButtonEl.addEventListener('click', function (evt) {
+        if (evt.shiftKey || evt.altKey || evt.ctrlKey) {
+          return;
+        }
+        evt.stopPropagation();
+        evt.preventDefault();
+        if (pairButtonEl.getAttribute('href') === window.location.pathname) {
+          routeUpdate(state, pairButtonEl.getAttribute('data-href-back') || state.rootPath, true);
+          pairButtonEl.blur();
+          return;
+        }
+        pairButtonEl.setAttribute('data-href-back', window.location.pathname);
+        routeUpdate(state, pairButtonEl.getAttribute('href'), true, {type: 'pair'});
+      });
+    }
 
     var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
@@ -410,8 +434,6 @@
         return;
       }
 
-      console.error('scene click', evt.target);
-
       var linkEl = evt.target.closest('[itemprop="url"]');
       if (!linkEl) {
         return;
@@ -447,6 +469,7 @@
       var path = getPath(href);
 
       var pathAdd = path === state.rootPath + 'add';
+      var pathPair = path === state.rootPath + 'pair';
 
       if (path === state.rootPath + 'profile') {
         htmlEl.setAttribute('data-layout', 'profile');
@@ -454,18 +477,28 @@
         htmlEl.setAttribute('data-layout', 'polyfill');
       } else if (pathAdd) {
         htmlEl.setAttribute('data-layout', 'play add');
+      } else if (pathPair) {
+        htmlEl.setAttribute('data-layout', 'play pair');
       } else {
         htmlEl.setAttribute('data-layout', 'play');
       }
       htmlEl.setAttribute('data-path', path);
 
-      var urlFieldEl = htmlEl.querySelector('[data-form="add"] [name="url"]');
-
+      var urlFieldEl = htmlEl.querySelector('form[data-form="add"] input[name="url"]');
       if (urlFieldEl) {
         if (pathAdd) {
           urlFieldEl.focus();
         } else {
           urlFieldEl.blur();
+        }
+      }
+
+      var telFieldEl = htmlEl.querySelector('form[data-form="pair"] input[name="tel"]');
+      if (telFieldEl) {
+        if (pathPair) {
+          telFieldEl.focus();
+        } else {
+          telFieldEl.blur();
         }
       }
 
