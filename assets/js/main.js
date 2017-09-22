@@ -380,12 +380,12 @@
         evt.stopPropagation();
         evt.preventDefault();
         if (pairButtonEl.getAttribute('href') === window.location.pathname) {
-          routeUpdate(state, pairButtonEl.getAttribute('data-href-back') || state.rootPath, true);
+          routeUpdate(pairButtonEl.getAttribute('data-href-back') || state.rootPath, true);
           pairButtonEl.blur();
           return;
         }
         pairButtonEl.setAttribute('data-href-back', window.location.pathname);
-        routeUpdate(state, pairButtonEl.getAttribute('href'), true, {type: 'pair'});
+        routeUpdate(pairButtonEl.getAttribute('href'), true, {type: 'pair'});
       });
     }
 
@@ -423,7 +423,7 @@
 
       if (navigate) {
         var pageUrl = state.rootPath + slug;
-        routeUpdate(state, pageUrl, true, {type: 'scene', slug: slug});
+        routeUpdate(pageUrl, true, {type: 'scene', slug: slug});
       }
 
       return slug;
@@ -465,15 +465,17 @@
       });
     }
 
-    function routeUpdate (state, href, push, data) {
+    function routeUpdate (href, push, data) {
+      var rootPath = window.state.rootPath;
+
       var path = getPath(href);
 
-      var pathAdd = path === state.rootPath + 'add';
-      var pathPair = path === state.rootPath + 'pair';
+      var pathAdd = path === rootPath + 'add';
+      var pathPair = path === rootPath + 'pair';
 
-      if (path === state.rootPath + 'profile') {
+      if (path === rootPath + 'profile') {
         htmlEl.setAttribute('data-layout', 'profile');
-      } else if (path.indexOf(state.rootPath + 'polyfill') === 0) {
+      } else if (path.indexOf(rootPath + 'polyfill') === 0) {
         htmlEl.setAttribute('data-layout', 'polyfill');
       } else if (pathAdd) {
         htmlEl.setAttribute('data-layout', 'play add');
@@ -509,7 +511,7 @@
       var titleEl = document.querySelector('title');
       var title = pageTitles[path];
 
-      if (path !== state.rootPath && title) {
+      if (path !== rootPath && title) {
         titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
         titleEl.setAttribute('data-l10n-id', 'title_page');
       } else {
@@ -535,7 +537,7 @@
         if (href in startUrls) {
           state.startUrl = startUrls[href];
         }
-        window.history.pushState(state, title, path);
+        window.history.pushState(state, null, path);
 
         if ('ga' in window) {
           ga('set', {
@@ -549,7 +551,11 @@
       return true;
     }
 
-    routeUpdate(state, state.path, false, state.routeData);
+    routeUpdate(state.path, false, state.routeData);
+
+    window.onpopstate = function (evt) {
+      routeUpdate(evt.state.path, false, state.routeData);
+    };
 
     parseProfile();
 
