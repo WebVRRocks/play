@@ -2,7 +2,7 @@
 (function () {
   var state = {
     rootPath: '/',
-    serverPath: 'https://play.webvr.rocks/',
+    serverOrigin: 'https://play.webvr.rocks',
     remoteSocketPath: 'https://remote.webvr.rocks/socketpeer/',
     supports: {}
   };
@@ -258,7 +258,7 @@
 
   window.addEventListener('load', function () {
     state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
-    state.serverPath = htmlEl.getAttribute('data-server-path') || state.serverPath;
+    state.serverOrigin = htmlEl.getAttribute('data-server-origin') || state.serverOrigin;
     state.remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || state.remoteSocketPath;
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
@@ -307,7 +307,7 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
           to: telEl.value,
-          body: 'Play WebVR now! ' + state.serverPath + remoteCode
+          body: 'Play WebVR now! ' + state.serverOrigin + state.rootPath + remoteCode
         }));
       });
       pairFormEl.addEventListener('input', function () {
