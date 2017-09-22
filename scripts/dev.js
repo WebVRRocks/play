@@ -12,17 +12,18 @@ const serverHost = process.env.WWW_HOST || process.env.HOST || '0.0.0.0';
 const serverPort = parseInt(process.env.REMOTE_PORT || '8080', 10);
 const serverHttps = process.env.WWW_HTTPS === '1';
 
-const getServerPath = (https, host, port) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}/`;
-let serverPath;
+const getServerOrigin = (https, host, port) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}`;
+let serverOrigin;
 
 const remoteHttps = process.env.REMOTE_HTTPS === '1' || process.env.REMOTE_HTTPS === 'true';
 const remoteHost = process.env.REMOTE_HOST || '0.0.0.0';
 const remotePort = parseInt(process.env.REMOTE_PORT || '3000', 10);
+const remoteTimeout = parseFloat(process.env.REMOTE_TIMEOUT || '3000');
 
 const remoteSocketPathname = '/socketpeer/';
 const prodRemoteSocketPath = 'https://remote.webvr.rocks/socketpeer/';
 
-const getRemoteSocketPath = (https, host, port, pathname) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}${remoteSocketPathname || getRemoteSocketPath}`;
+const getRemoteSocketPath = (https, host, port, pathname) => `http${https ? 's' : ''}://${host || remoteHost}:${port || remotePort}${pathname || remoteSocketPathname}`;
 let remoteSocketPath;
 
 let settings = {
@@ -56,28 +57,28 @@ function redirectMiddleware (req, res, next) {
   next();
 }
 
-const rewriteServerPathMiddleware = serverHost => connectBodyRewrite({
+const rewriteServerOriginMiddleware = value => connectBodyRewrite({
   accept: res => {
     return res.getHeader('content-type').match(/text\/html/i);
   },
   rewrite: body => {
-    return body.replace(/data-server-path=.*/, `data-server-path="${serverPath}"`);
+    return body.replace(/data-server-path=.*/, `data-server-origin="${value}"`);
   }
 });
 
-const rewriteRemoteSocketPathMiddleware = remoteSocketPath => connectBodyRewrite({
+const rewriteRemoteSocketPathMiddleware = value => connectBodyRewrite({
   accept: res => {
     return res.getHeader('content-type').match(/text\/html/i);
   },
   rewrite: body => {
-    return body.replace(/data-remote-socket-path=.*/, `data-remote-socket-path="${remoteSocketPath}"`);
+    return body.replace(/data-remote-socket-path=.*/, `data-remote-socket-path="${value}"`);
   }
 });
 
 function startServer (socketpeerRunningLocally) {
   return internalIp.v4().then(localIP => {
-    serverPath = getServerPath(serverHttps, localIP, settings.port);
-    settings.middleware.push(rewriteServerPathMiddleware(remoteSocketPath));
+    serverOrigin = getServerOrigin(serverHttps, localIP, settings.port);
+    settings.middleware.push(rewriteServerOriginMiddleware(serverOrigin));
 
     if (socketpeerRunningLocally) {
       remoteSocketPath = getRemoteSocketPath(remoteHttps, remoteHost, remotePort);
@@ -102,8 +103,8 @@ const spReqOptions = {
 };
 new Promise((resolve, reject) => {
   let reqTimeout = setTimeout(() => {
-    reject(new Error('Request timed out after 3 seconds'));
-  }, 3000);
+    reject(new Error(`Request timed out after ${remoteTimeout / 1000} seconds`));
+  }, remoteTimeout);
   let req = http.request(spReqOptions, res => {
     res.setEncoding('utf8');
     res.on('error', () => {
