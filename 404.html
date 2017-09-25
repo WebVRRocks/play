@@ -15,6 +15,11 @@
           window.location.href = pathnameClean;
           return;
         }
+
+        try {
+          window.sessionStorage.redirect_path = window.location.pathname;
+        } catch (err) {
+        }
       })();
     </script>
     <title>404 Not Found • WebVR</title>

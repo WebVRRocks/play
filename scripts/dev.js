@@ -32,6 +32,7 @@ let settings = {
   port: serverPort,
   open: (process.env.WWW_OPEN || process.env.OPEN) === 'true',
   ignore: process.env.WWW_IGNORE || process.env.IGNORE || '.git,node_modules',
+  file: 'index.html',
   logLevel: parseInt(process.env.WWW_LOGS || process.env.LOGS || '2', 10),  // 0 = errors only; 1 = some errors; 2 = many errors.
   middleware: [
     redirectMiddleware

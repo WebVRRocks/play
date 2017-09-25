@@ -14,6 +14,50 @@
   } catch (err) {
   }
 
+  var html404 = `<!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="theme-color" content="#ff4136">
+      <meta name="robots" content="none">
+      <script>
+        (function () {
+          var pathname = window.location.pathname;
+          var pathnameClean = pathname.replace(/\.html$/i, '').replace(/\/+/g, '/');
+
+          if (pathname !== pathnameClean) {
+            window.location.href = pathnameClean;
+            return;
+          }
+        })();
+      </script>
+      <title>404 Not Found • WebVR</title>
+      <style>
+        html {
+          background: #111;
+          font-size: 16px;
+        }
+
+        body {
+          color: #ddd;
+          font: 1.25rem/1.5 Consolas, Andale Mono, Monaco, Courier New, monospace;
+          font-size: calc(1rem + .5vw);
+          max-width: 45rem;
+          padding: 3rem;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>404 Not Found</h1>
+      <p>Sorry, we could not find the page or file you requested.</p>
+      <p>It&rsquo;s possible that the link you clicked is out of date or the address was typed incorrectly.</p>
+      <p>Visit the <a href="/">WebVR homepage</a>.</p>
+    </body>
+  </html>
+  `;
+
   // Register a Service Worker, if supported by the browser.
   if ('URLSearchParams' in window) {
     var qs = new URLSearchParams(window.location.search.substr(1));
@@ -356,6 +400,7 @@
       '  opacity: 1;\n' +
       '}\n';
 
+
     var titleEl = document.querySelector('[data-l10n-id="title_default"]');
     pageTitles[state.rootPath] = titleEl.textContent;
 
@@ -467,6 +512,10 @@
       });
     }
 
+    function isValidLocalPath (href) {
+      return !(href in pageTitles) && !(href in startUrls);
+    }
+
     function routeUpdate (href, push, data) {
       var rootPath = window.state.rootPath;
 
@@ -506,7 +555,12 @@
         }
       }
 
-      if ((!(href in pageTitles) && !(href in startUrls)) || href === window.location.href) {
+      if (href === window.location.href) {
+        return false;
+      }
+
+      if (isValidLocalPath(href)) {
+        document.documentElement.innerHTML = html404;
         return false;
       }
 
