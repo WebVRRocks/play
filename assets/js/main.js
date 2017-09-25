@@ -379,13 +379,15 @@
         }
         evt.stopPropagation();
         evt.preventDefault();
-        if (pairButtonEl.getAttribute('href') === window.location.pathname) {
+        var pairButtonHref = pairButtonEl.getAttribute('href');
+        var currentUrl = window.location.pathname;
+        if (pairButtonHref === currentUrl) {
           routeUpdate(pairButtonEl.getAttribute('data-href-back') || state.rootPath, true);
           pairButtonEl.blur();
           return;
         }
-        pairButtonEl.setAttribute('data-href-back', window.location.pathname);
-        routeUpdate(pairButtonEl.getAttribute('href'), true, {type: 'pair'});
+        pairButtonEl.setAttribute('data-href-back', currentUrl);
+        routeUpdate(pairButtonHref, true, {type: 'pair'});
       });
     }
 
