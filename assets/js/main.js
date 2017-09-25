@@ -529,23 +529,24 @@
         sceneEl.setAttribute('src', startUrls[path]);
       }
 
-      // TODO: Handle `popState` navigation.
-      if (push !== false) {
-        var state = {};
-        state.path = path;
-        state.title = title;
-        if (href in startUrls) {
-          state.startUrl = startUrls[href];
-        }
-        window.history.pushState(state, null, path);
+      var state = {};
+      state.path = path;
+      state.title = document.title;
+      if (href in startUrls) {
+        state.startUrl = startUrls[href];
+      }
 
+      if (push !== false) {
+        window.history.pushState(state, null, path);
         if ('ga' in window) {
           ga('set', {
-            page: window.location.pathname,
-            title: title
+            page: state.path,
+            title: state.title
           });
           ga('send', 'pageview');
         }
+      } else {
+        window.history.replaceState(state, null, path);
       }
 
       return true;
@@ -554,7 +555,7 @@
     routeUpdate(state.path, false, state.routeData);
 
     window.onpopstate = function (evt) {
-      routeUpdate(evt.state.path, false, state.routeData);
+      routeUpdate(evt.state.path, false, evt.state.routeData);
     };
 
     parseProfile();
