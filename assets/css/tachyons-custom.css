@@ -1,3 +1,29 @@
+/**
+ * For touch-capable iOS devices, handle these selectors with scrollable styles:
+ *
+ *   pre
+ *   .overflow-container
+ *   .overflow-scroll
+ *   .overflow-scroll-l
+ *   .overflow-scroll-m
+ *   .overflow-scroll-ns
+ *   .overflow-x-scroll
+ *   .overflow-x-scroll-l
+ *   .overflow-x-scroll-m
+ *   .overflow-x-scroll-ns
+ *   .overflow-y-scroll
+ *   .overflow-y-scroll-l
+ *   .overflow-y-scroll-ns
+ *
+ */
+pre,
+.overflow-container,
+[class*="overflow-scroll"],
+[class*="overflow-x-scroll"],
+[class*="overflow-y-scroll"] {
+  -webkit-overflow-scrolling: touch;
+}
+
 .vh-72 {
   height: 72vh;
 }
