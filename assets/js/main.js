@@ -327,7 +327,7 @@
       'html[data-layout~="pair"] [data-slug="pair"]',
       'html[data-layout~="add"] [data-slug-clickable][data-slug="add"]',
       'html[data-layout~="profile"] [data-slug="profile"]',
-      'html[data-layout~="polyfill_v2"] [data-slug="profile"]'
+      'html[data-layout~="polyfill-v2"] [data-slug="profile"]'
     ];
     var cssSelectorsToHighlight = [];
 

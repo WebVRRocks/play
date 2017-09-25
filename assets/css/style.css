@@ -214,21 +214,21 @@ html[data-layout~="play"] body {
   width: 100%;
 }
 
-[data-slug="a_painter"] [itemprop="image"] {
+[data-slug="a-painter"] [itemprop="image"] {
   background-size: fill;
   background-position: 50%;
 }
 
-[data-slug="puzzle_rain"] [itemprop="image"] {
+[data-slug="a-blast"] [itemprop="image"] {
   background-size: contain;
 }
 
-[data-slug="a_blast"] [itemprop="image"] {
+[data-slug="puzzle-rain"] [itemprop="image"] {
   background-size: contain;
 }
 
-[data-slug="puzzle_rain"] a:hover [itemprop="image"] {
-  background-image: url(../img/scenes/puzzle_rain/puzzle-rain-animated-preview-spectator.gif) !important;
+[data-slug="puzzle-rain"] a:hover [itemprop="image"] {
+  background-image: url(../img/scenes/puzzle-rain/puzzle-rain-animated-preview-spectator.gif) !important;
 }
 
 .focusable-radio:focus ~ [itemprop="details"] [itemprop="image"],

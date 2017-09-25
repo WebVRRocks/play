@@ -5,14 +5,14 @@
   "/pair": "/",
   "/profile": "/",
   "/route": "/",
-  "/a_painter": "/",
-  "/a_saturday_night": "/",
-  "/puzzle_rain": "/",
-  "/a_blast": "/",
+  "/a-painter": "/",
+  "/a-saturday-night": "/",
+  "/puzzle-rain": "/",
+  "/a-blast": "/",
   "/polyfills": "/",
-  "/polyfill_v1": "/",
-  "/polyfill_v1.0": "/",
-  "/polyfill_v1.1": "/",
-  "/polyfill_v2": "/",
-  "/polyfill_v2.0": "/"
+  "/polyfill-v1": "/",
+  "/polyfill-v1.0": "/",
+  "/polyfill-v1.1": "/",
+  "/polyfill-v2": "/",
+  "/polyfill-v2.0": "/"
 }
