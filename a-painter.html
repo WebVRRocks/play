@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="relative"
       data-root-path="/"
+      data-server-path="https://play.webvr.rocks"
       data-remote-socket-path="https://remote.webvr.rocks/socketpeer/"
       data-path="/play"
       data-layout="play">
@@ -32,20 +33,24 @@
   <body class="bg-near-black white relative">
     <section id="play" data-page="play" class="relative z-2">
       <h2 class="dn a11y-green bb f2 vw-25 pb4 lh-solid ma0" data-l10n-id="play">Play</h2>
-      <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0"></iframe>
+      <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0 z-1"></iframe>
       <section id="welcome" data-section="welcome" class="welcome bg-near-white vh-72 overflow-hidden">
-        <div class="wrap pa3 pv4 relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
+        <div class="welcome-wrap wrap pa3 pv4 relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
           <div class="content relative z-3 w-50">
-            <h2 class="f2 pb3 lh-solid" data-l10n-id="welcome_to_webvr">
-              <span class="db">Welcome to WebVR</span>
-            </h2>
+            <h2 class="f2 pb3 lh-solid" data-l10n-id="welcome_to_webvr">Welcome to WebVR</h2>
             <form action="/pair" method="get" class="flex flex-column" data-form="pair">
-              <input type="tel" name="tel" id="tel" class="db pa2 order-1 o-0 glow mw6" placeholder="Enter your phone number"> <label for="tel" class="db f6 o-0 pb1 silver">Phone number</label>
+              <fieldset class="pa0 ma0 bw0 mw6" data-slug="pair">
+                <legend class="dn" data-l10n-id="pair_your_phone">Pair your phone</legend>
+                <label class="wrap f3 db pb1 silver">
+                  <div class="form-label-text f6" data-l10n-id="phone_number">Phone number</div>
+                  <input type="text" name="tel" id="tel" class="relative z-3 db pa2 w-100 family-inherit color-inherit" placeholder="Enter your phone number" data-l10n-id="enter_your_phone_number">
+                </label>
+              </fieldset>
             </form>
           </div>
-          <aside class="aside f2 pb3 lh-solid flex items-end justify-end h-100 relative z-3 w-50" data-section="aside">
-            <a href="/pair" id="pair-button" class="pair-button db self-end f5 link glow">
-              <span class="dib gray hover-near-black bb b--transparent hover-b--near-black pb1">Pair your phone as a remote control</span>
+          <aside class="aside f2 pb3 lh-solid flex items-end justify-end h-100 relative z-3" data-section="aside">
+            <a href="/pair" id="pair-button" class="pair-button db self-end f5 link glow gray hover-near-black">
+              <span class="dib bb b--transparent hover-b--gray pb1" data-l10n-id="remote_control_with_your_phone">Remote control with your phone</span>
             </a>
           </aside>
           <!--
@@ -58,50 +63,50 @@
         </div>
       </section>
       <form id="scenes-form" method="post" action="#" data-form="scenes" class="z-2 absolute bottom-0 vh-25 w-100 h-100 dib">
-        <h2 class="dn"><a href="#demos">Demos</a></h2>
+        <h2 class="dn"><a href="#demos" data-l10n-id="demos">Demos</a></h2>
         <ol data-section="scenes" class="list f0 dib v-top mw7-5 nowrap overflow-x-scroll pr3 ml3 vh-100">
-          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_painter" data-slug-clickable class="dib vw-25 h-100" id="a_painter">
+          <li itemprop="scene" data-active="true" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a-painter" data-slug-clickable class="dib vw-25 h-100" id="a-painter">
             <label class="db w-100 h-100 relative">
-              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_painter" id="radio_a_painter">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a-painter" id="radio_a-painter">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-painter/" class="focusable-link no-underline white o-50 glow db h-100 pa3 pl2">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_painter/icon.png)"></div>
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a-painter/icon.png)"></div>
                   <span itemprop="name" class="db demo-name truncate">A-Painter</span>
                 </a>
                 <span itemprop="description" class="dn">Paint and sketch in VR by Mozilla A-Frame team</span>
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_saturday_night" data-slug-clickable class="dib vw-25 h-100" id="a_saturday_night">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a-saturday-night" data-slug-clickable class="dib vw-25 h-100" id="a-saturday-night">
             <label class="db w-100 h-100 relative">
-              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_saturday_night" id="radio_a_saturday_night">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a-saturday-night" id="radio_a-saturday-night">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-saturday-night/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_saturday_night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a-saturday-night/poster.jpg); background-size: contain; background-color: rgb(30,18,22)"></div>
                   <span itemprop="name" class="db demo-name truncate">A Saturday Night</span>
                 </a>
                 <span itemprop="description" class="dn">Record and share your dance moves</span>
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle_rain" data-slug-clickable class="dib vw-25 h-100" id="puzzle_rain">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="puzzle-rain" data-slug-clickable class="dib vw-25 h-100" id="puzzle-rain">
             <label class="db w-100 h-100 relative">
-              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="puzzle_rain" id="radio_a_puzzle_rain">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="puzzle-rain" id="radio_puzzle-rain">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://mozvr.com/puzzle-rain/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle_rain/poster.png); background-size: cover"></div>
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/puzzle-rain/poster.png); background-size: cover"></div>
                   <span itemprop="name" class="db demo-name truncate">Puzzle Rain</span>
                 </a>
                 <span itemprop="description" class="dn">A musical WebVR journey for the HTC VIVE</span>
               </div>
             </label>
           </li>
-          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a_blast" data-slug-clickable class="dib vw-25 h-100" id="a_blast">
+          <li itemprop="scene" itemscope itemtype="http://schema.org/WebApplication" data-app-type="WebApplication" data-slug="a-blast" data-slug-clickable class="dib vw-25 h-100" id="a-blast">
             <label class="db w-100 h-100 relative">
-              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a_blast" id="radio_a_blast">
+              <input type="radio" name="scene" class="focusable-radio absolute top-0 left-0 o-0" value="a-blast" id="radio_a-blast">
               <div itemprop="details" class="demo-details f5 h-100">
                 <a itemprop="url" href="https://aframe.io/a-blast/" class="focusable-link no-underline white o-50 glow db h-100 pa3">
-                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a_blast/poster.png); background-size: cover"></div>
+                  <div itemprop="image" class="bg-center mb2 ba b--black-10" style="background-image: url(/assets/img/scenes/a-blast/poster.png); background-size: cover"></div>
                   <span itemprop="name" class="db demo-name truncate">A-Blast</span>
                 </a>
                 <span itemprop="description" class="dn">Save the world from the cutest creatures in the universe</span>
@@ -132,7 +137,7 @@
           <fieldset class="pa0 ma0 bw0">
             <legend class="dn">Submit a site URL</legend>
             <div class="wrap pt4 f3">
-              <input type="url" name="url" class="font-face-inherit font-family-inherit near-black pa3 w-100" placeholder="https://example.com/">
+              <input type="url" name="url" class="family-inherit near-black pa3 w-100" placeholder="https://example.com/" required>
             </div>
           </fieldset>
         </form>
@@ -171,7 +176,7 @@
         </dl>
       </div>
     </section>
-    <section id="polyfill_v2" data-page="polyfill_v2">
+    <section id="polyfill-v2" data-page="polyfill-v2">
       <h2 class="a11y-green bb f2 pb4 lh-solid" data-l10n-id="polyfill_v2">WebVR API v2 Polyfill</h2>
     </section>
   </body>

@@ -2,6 +2,7 @@
 (function () {
   var state = {
     rootPath: '/',
+    serverOrigin: 'https://play.webvr.rocks',
     remoteSocketPath: 'https://remote.webvr.rocks/socketpeer/',
     supports: {}
   };
@@ -257,6 +258,7 @@
 
   window.addEventListener('load', function () {
     state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
+    state.serverOrigin = htmlEl.getAttribute('data-server-origin') || state.serverOrigin;
     state.remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || state.remoteSocketPath;
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
@@ -292,6 +294,11 @@
           remoteSocketOrigin = new URL(state.remoteSocketPath).origin;
         }
         if (!remoteSocketOrigin) {
+          var a = document.createElement('a');
+          a.href = state.remoteSocketPath;
+          remoteSocketOrigin = state.remoteSocketPath.origin;
+        }
+        if (!remoteSocketOrigin) {
           throw 'No remote socket';
         }
 
@@ -300,7 +307,7 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
           to: telEl.value,
-          body: 'Play WebVR now! ' + window.location.origin + '/' + remoteCode
+          body: 'Play WebVR now! ' + state.serverOrigin + state.rootPath + remoteCode
         }));
       });
       pairFormEl.addEventListener('input', function () {
@@ -309,9 +316,6 @@
       pairFormEl.addEventListener('input', function () {
         pairFormEl.setAttribute('data-focused', 'false');
       });
-      function focusPairTel () {
-        var telEl = pairFormEl.querySelector('tel');
-      }
     }
 
     state.path = getPath();
@@ -320,9 +324,10 @@
     var cssDynamicRulesEl = document.querySelector('#css-dynamic-rules');
     var cssSelectorsToShow = [
       'html[data-layout~="play"] [data-slug-clickable][data-slug="play"]',
+      'html[data-layout~="pair"] [data-slug="pair"]',
       'html[data-layout~="add"] [data-slug-clickable][data-slug="add"]',
       'html[data-layout~="profile"] [data-slug="profile"]',
-      'html[data-layout~="polyfill_v2"] [data-slug="profile"]'
+      'html[data-layout~="polyfill-v2"] [data-slug="profile"]'
     ];
     var cssSelectorsToHighlight = [];
 
@@ -357,11 +362,34 @@
     var loadANewSiteEl = document.querySelector('h2[data-l10n-id="load_a_new_site"]');
     pageTitles[state.rootPath + 'add'] = loadANewSiteEl.textContent;
 
+    var pairYourPhoneHeadingEl = document.querySelector('[data-l10n-id="pair_your_phone"]');
+    pageTitles[state.rootPath + 'pair'] = pairYourPhoneHeadingEl.textContent;
+
     var profileHeadingEl = document.querySelector('[data-l10n-id="system_profile"]');
     pageTitles[state.rootPath + 'profile'] = profileHeadingEl.textContent;
 
     var polyfillV2HeadingEl = document.querySelector('[data-l10n-id="polyfill_v2"]');
     pageTitles[state.rootPath + 'polyfill_v2'] = polyfillV2HeadingEl.textContent;
+
+    var pairButtonEl = document.querySelector('#pair-button');
+    if (pairButtonEl) {
+      pairButtonEl.addEventListener('click', function (evt) {
+        if (evt.shiftKey || evt.altKey || evt.ctrlKey) {
+          return;
+        }
+        evt.stopPropagation();
+        evt.preventDefault();
+        var pairButtonHref = pairButtonEl.getAttribute('href');
+        var currentUrl = window.location.pathname;
+        if (pairButtonHref === currentUrl) {
+          routeUpdate(pairButtonEl.getAttribute('data-href-back') || state.rootPath, true);
+          pairButtonEl.blur();
+          return;
+        }
+        pairButtonEl.setAttribute('data-href-back', currentUrl);
+        routeUpdate(pairButtonHref, true, {type: 'pair'});
+      });
+    }
 
     var scenesFormEl = document.querySelector('[data-form="scenes"]');
 
@@ -397,7 +425,7 @@
 
       if (navigate) {
         var pageUrl = state.rootPath + slug;
-        routeUpdate(state, pageUrl, true, {type: 'scene', slug: slug});
+        routeUpdate(pageUrl, true, {type: 'scene', slug: slug});
       }
 
       return slug;
@@ -407,8 +435,6 @@
       if (!evt.target.closest || evt.shiftKey || evt.altKey || evt.ctrlKey) {
         return;
       }
-
-      console.error('scene click', evt.target);
 
       var linkEl = evt.target.closest('[itemprop="url"]');
       if (!linkEl) {
@@ -441,29 +467,42 @@
       });
     }
 
-    function routeUpdate (state, href, push, data) {
+    function routeUpdate (href, push, data) {
+      var rootPath = window.state.rootPath;
+
       var path = getPath(href);
 
-      var pathAdd = path === state.rootPath + 'add';
+      var pathAdd = path === rootPath + 'add';
+      var pathPair = path === rootPath + 'pair';
 
-      if (path === state.rootPath + 'profile') {
+      if (path === rootPath + 'profile') {
         htmlEl.setAttribute('data-layout', 'profile');
-      } else if (path.indexOf(state.rootPath + 'polyfill') === 0) {
+      } else if (path.indexOf(rootPath + 'polyfill') === 0) {
         htmlEl.setAttribute('data-layout', 'polyfill');
       } else if (pathAdd) {
         htmlEl.setAttribute('data-layout', 'play add');
+      } else if (pathPair) {
+        htmlEl.setAttribute('data-layout', 'play pair');
       } else {
         htmlEl.setAttribute('data-layout', 'play');
       }
       htmlEl.setAttribute('data-path', path);
 
-      var urlFieldEl = htmlEl.querySelector('[data-form="add"] [name="url"]');
-
+      var urlFieldEl = htmlEl.querySelector('form[data-form="add"] input[name="url"]');
       if (urlFieldEl) {
         if (pathAdd) {
           urlFieldEl.focus();
         } else {
           urlFieldEl.blur();
+        }
+      }
+
+      var telFieldEl = htmlEl.querySelector('form[data-form="pair"] input[name="tel"]');
+      if (telFieldEl) {
+        if (pathPair) {
+          telFieldEl.focus();
+        } else {
+          telFieldEl.blur();
         }
       }
 
@@ -474,7 +513,7 @@
       var titleEl = document.querySelector('title');
       var title = pageTitles[path];
 
-      if (path !== state.rootPath && title) {
+      if (path !== rootPath && title) {
         titleEl.setAttribute('data-l10n-args', JSON.stringify({title: title}));
         titleEl.setAttribute('data-l10n-id', 'title_page');
       } else {
@@ -492,29 +531,34 @@
         sceneEl.setAttribute('src', startUrls[path]);
       }
 
-      // TODO: Handle `popState` navigation.
-      if (push !== false) {
-        var state = {};
-        state.path = path;
-        state.title = title;
-        if (href in startUrls) {
-          state.startUrl = startUrls[href];
-        }
-        window.history.pushState(state, title, path);
+      var state = {};
+      state.path = path;
+      state.title = document.title;
+      if (href in startUrls) {
+        state.startUrl = startUrls[href];
+      }
 
+      if (push !== false) {
+        window.history.pushState(state, null, path);
         if ('ga' in window) {
           ga('set', {
-            page: window.location.pathname,
-            title: title
+            page: state.path,
+            title: state.title
           });
           ga('send', 'pageview');
         }
+      } else {
+        window.history.replaceState(state, null, path);
       }
 
       return true;
     }
 
-    routeUpdate(state, state.path, false, state.routeData);
+    routeUpdate(state.path, false, state.routeData);
+
+    window.onpopstate = function (evt) {
+      routeUpdate(evt.state.path, false, evt.state.routeData);
+    };
 
     parseProfile();
 

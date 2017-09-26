@@ -162,12 +162,42 @@
     handleCurrentPin(code);
     initSpatialNavigation();
 
+    var peer;
+
     var peerConnectBtnEl = document.querySelector('#peer-connect-btn');
     if (peerConnectBtnEl) {
       peerConnectBtnEl.addEventListener('click', function () {
         // TODO: Handle `popState` navigation.
         code = redirectToNewPin();
         peerConnect(code);
+      });
+    }
+
+    var addFormEl = document.querySelector('form[data-form="add"]');
+    if (addFormEl) {
+      addFormEl.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        var urlEl = addFormEl.querySelector('input[name="url"]');
+
+        if (!urlEl) {
+          return;
+        }
+
+        var url = urlEl.value;
+
+        var sceneEl = document.querySelector('#scene');
+        if (sceneEl) {
+          sceneEl.setAttribute('src', url);
+        }
+
+        var peerMsg = {
+          action: 'navigate',
+          value: url
+        };
+        log('navigating to ' + url);
+        peer.send(peerMsg);
       });
     }
 
@@ -187,7 +217,7 @@
           }
         }
 
-        var peer = new SocketPeer({
+        peer = new SocketPeer({
           pairCode: code,
           url: remoteSocketPath
         });
@@ -196,39 +226,48 @@
         function directionChanged (value) {
           log('<button press> ' + value);
 
-          peer.send(value);
-
-          var stateData = {
-            type: 'buttondown',
+          var peerMsg = {
+            action: 'move',
             value: value
           };
 
-          window.top.postMessage(JSON.stringify(stateData), '*');
+          peer.send(peerMsg);
 
-          window.location.hash = '#' + value;
+          // window.top.postMessage(JSON.stringify(peerMsg), '*');
+          // window.location.hash = '#' + value;
 
           return stateData;
         }
 
         peer.on('data', function (data) {
-          SpatialNavigation.focus();
+          console.log(typeof data.value);
+          log('received data: ' + JSON.stringify(data));
 
-          log('received data: ' + data);
+          var action = data.action;
+          var value = data.value;
 
-          if (data === 'up' || data === 'right' || data === 'down' || data === 'left') {
-            if (data === 'up') {
-              data = 'left';
+          if (action === 'move') {
+            SpatialNavigation.focus();
+            if (action === 'up' || action === 'right' || action === 'down' || action === 'left') {
+              if (action === 'up') {
+                action = 'left';
+              }
+              if (action === 'down') {
+                action = 'right';
+              }
+              SpatialNavigation.move(action);
+            } else if (action === 'select') {
+              var el = document.activeElement;
+              el.click();
+              try {
+                el.closest('[data-slug-clickable]').querySelector('a').click();
+              } catch (err) {
+              }
             }
-            if (data === 'down') {
-              data = 'right';
-            }
-            SpatialNavigation.move(data);
-          } else if (data === 'select') {
-            var el = document.activeElement;
-            el.click();
-            try {
-              el.closest('[data-slug-clickable]').querySelector('a').click();
-            } catch (err) {
+          } else if (action === 'navigate') {
+            var sceneEl = document.querySelector('#scene');
+            if (sceneEl) {
+              sceneEl.setAttribute('src', value);
             }
           }
         });
@@ -261,7 +300,7 @@
           connected = false;
         });
 
-        log('waiting for another user to go to ' + location.href);
+        log('waiting for another user to go to ' + window.state.serverOrigin + window.state.rootPath + code);
 
         if (cb) {
           return cb(null, peer);

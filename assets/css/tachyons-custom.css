@@ -1,3 +1,29 @@
+/**
+ * For touch-capable iOS devices, handle these selectors with scrollable styles:
+ *
+ *   pre
+ *   .overflow-container
+ *   .overflow-scroll
+ *   .overflow-scroll-l
+ *   .overflow-scroll-m
+ *   .overflow-scroll-ns
+ *   .overflow-x-scroll
+ *   .overflow-x-scroll-l
+ *   .overflow-x-scroll-m
+ *   .overflow-x-scroll-ns
+ *   .overflow-y-scroll
+ *   .overflow-y-scroll-l
+ *   .overflow-y-scroll-ns
+ *
+ */
+pre,
+.overflow-container,
+[class*="overflow-scroll"],
+[class*="overflow-x-scroll"],
+[class*="overflow-y-scroll"] {
+  -webkit-overflow-scrolling: touch;
+}
+
 .vh-72 {
   height: 72vh;
 }
@@ -78,12 +104,12 @@
   border-color: #ff4136;
 }
 
-.font-face-inherit {
-  font-family: inherit;
+.size-inherit {
+  font-size: inherit;
 }
 
-.font-style-inherit {
-  font-style: inherit;
+.family-inherit {
+  font-family: inherit;
 }
 
 .glow,
@@ -93,8 +119,14 @@
   transition: opacity .15s ease-in, color .15s ease-in;
 }
 
-.hover-b--near-black:hover {
-  border-color: #999;
+.hover-b--gray:hover,
+a:hover > .hover-b--gray {
+  border-color: #777;
+}
+
+.hover-b--near-black:hover,
+a:hover > .hover-b--near-black {
+  border-color: #111;
 }
 
 form[data-focusued="true"] {
