@@ -36,21 +36,21 @@
       <iframe id="scene" src="" class="scene w-100 vh-75 absolute top-0 left-0 bottom-0 bw0 z-1"></iframe>
       <section id="welcome" data-section="welcome" class="welcome bg-near-white vh-72 overflow-hidden">
         <div class="welcome-wrap wrap relative z-1 h-100 w-100 gray flex items-center bg-right bg-bottom">
-          <div class="content relative z-3 w-50 pa4">
+          <div class="content relative z-4 w-50 pa4">
             <img class="mozillavr-logo w6" src="assets/img/welcome/mozilla-galaxy-logo.svg" alt="Mozilla VR">
             <h2 class="f1 fw1 pb3 lh-solid welcome-title dn" data-l10n-id="welcome">Galaxy</h2>
-            <form action="/pair" method="get" class="flex flex-column" data-form="pair">
-              <fieldset class="pa0 ma0 bw0 mw6" data-slug="pair">
+            <form action="/pair" method="get" class="pt4" data-form="pair">
+              <fieldset class="pa0 ma0 bw0 mw6 relative z-1" data-slug="pair">
                 <legend class="dn" data-l10n-id="pair_your_phone">Pair your phone</legend>
                 <label class="wrap f3 db pb1 silver">
                   <div class="form-label-text f6" data-l10n-id="phone_number">Phone number</div>
-                  <input type="text" name="tel" id="tel" class="relative z-3 db pa2 w-100 family-inherit color-inherit" placeholder="Enter your phone number" data-l10n-id="enter_your_phone_number">
+                  <input type="text" name="tel" id="tel" class="relative z-3 db pa2 mt1 w-100 family-inherit color-inherit" placeholder="Enter your phone number" data-l10n-id="enter_your_phone_number">
                 </label>
               </fieldset>
             </form>
           </div>
-          <aside class="aside f2 lh-solid flex items-end justify-end h-100 w-100 relative z-4 pa4" data-section="aside">
-            <a href="/pair" id="pair-button" class="self-end pair-button f7 link glow gray hover-near-black tr relative">
+          <aside class="aside f2 lh-solid flex items-end justify-end h-100 w-100 relative z-4" data-section="aside">
+            <a href="/pair" id="pair-button" class="self-end pair-button f7 link glow gray hover-near-black tr relative pa4 mr2">
               <span class="dib bb b--transparent hover-b--gray lh-copy" data-l10n-id="remote_control">Pair phone as remote</span>
             </a>
           </aside>

@@ -290,17 +290,6 @@ html[data-layout~="play"] body {
   /*background-color: #e7e5e2;*/  /* "Light Grey" per https://mozilla.ninja/visualelements/ */
 }
 
-.welcome-wrap:before {
-  background: url(../img/welcome/firefox-space.png) 100% 50% no-repeat;
-  background-size: 50vh auto;
-  content: "";
-  height: 90vh;
-  position: absolute;
-  z-index: 4;
-  right: 1rem;
-  width: 100%;
-}
-
 .pair-button:before {
   background: url(../img/mobile_remote.svg) no-repeat;
   background-size: contain;
@@ -334,5 +323,20 @@ html[data-layout~="play"]:not([data-layout~="add"]) /*iframe*/.scene[src=""] ~ [
   background: url(../img/stars-bg.svg);
 }
 
-.mozillavr-logo {
+@media screen and (min-width: 30em) {
+  .welcome-wrap:before {
+    background: url(../img/welcome/firefox-space.png) 100% 50% no-repeat;
+    background-size: 50vh auto;
+    content: "";
+    height: 90vh;
+    position: absolute;
+    right: 2rem;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 86em) {
+  [data-form="pair"] {
+    padding-left: calc(8.5rem + .5vw);  /* TODO: Fix hack! */
+  }
 }
