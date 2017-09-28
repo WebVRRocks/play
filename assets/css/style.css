@@ -282,33 +282,57 @@ html[data-layout~="play"] body {
   transform: scale(1.1);
 }
 
+.welcome-wrap {
+  background: linear-gradient(to bottom, rgba(255,255,255,.2) 0%, transparent 100%);
+}
+
+[data-section="welcome"] [data-section="aside"] {
+  /*background-color: #e7e5e2;*/  /* "Light Grey" per https://mozilla.ninja/visualelements/ */
+}
+
 .welcome-wrap:before {
-  background: url(../img/vr-bg.png) 100% 100% no-repeat;
+  background: url(../img/welcome/firefox-space.png) 100% 50% no-repeat;
+  background-size: 50vh auto;
   content: "";
   height: 90vh;
   position: absolute;
-  z-index: 3;
-  opacity: .1;
-  filter: invert(1);
+  z-index: 4;
+  right: 1rem;
   width: 100%;
-}
-
-.pair-button {
-  padding-right: 2.75rem;
 }
 
 .pair-button:before {
   background: url(../img/mobile_remote.svg) no-repeat;
-  background-size: auto 20px;
+  background-size: contain;
   content: "";
   display: inline-block;
-  height: 20px;
-  margin-right: .25rem;
+  height: 16px;
+  filter: invert(1);
+  margin-right: 0;
   opacity: .5;
+  position: relative;
+  top: 2px;
   transition: opacity .15s ease-in;
-  width: 12px;
+  width: 10px;
+}
+
+.pair-button:hover {
+  color: rgba(255,255,255,.8);
 }
 
 .pair-button:hover:before {
   opacity: 1;
+}
+
+.welcome-title {
+  color: cyan;
+  font-size: 5rem;
+  letter-spacing: .1ch;
+}
+
+html[data-layout~="play"]:not([data-layout~="add"]) /*iframe*/.scene[src=""] ~ [data-section="welcome"] {
+  background: url(../img/stars-bg.svg);
+}
+
+.mozillavr-logo {
 }
