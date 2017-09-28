@@ -1,5 +1,9 @@
 title_default = Mozilla Galaxy • Explore Virtual Reality on the Web
-title_page = { $title } • WebVR
+title_page = { $title } • Galaxy
+
+site_title = Mozilla Galaxy
+site_link
+  .title = Mozilla Galaxy
 
 play = Play
 demos = Demos
@@ -65,8 +69,6 @@ select_scene = Select scene
 polyfill_v2 = WebVR API v2 Polyfill
 
 load_a_new_site = Load a new site
-
-welcome = Galaxy
 
 pair_your_phone = Pair your phone
 phone_number = Phone number

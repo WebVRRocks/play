@@ -340,3 +340,8 @@ html[data-layout~="play"]:not([data-layout~="add"]) /*iframe*/.scene[src=""] ~ [
     padding-left: calc(8.5rem + .5vw);  /* TODO: Fix hack! */
   }
 }
+
+.site-logo {
+  background-image: url(../img/welcome/mozilla-galaxy-logo.svg);
+  height: 15rem;
+}
