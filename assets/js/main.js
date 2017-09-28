@@ -305,9 +305,13 @@
         var xhr = new XMLHttpRequest();
         xhr.open('post', remoteSocketOrigin + '/sms');
         xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // var urlToSend = state.serverOrigin + state.rootPath + remoteCode;
+        var urlToSend = remoteSocketOrigin + '/' + remoteCode;
+
         xhr.send(JSON.stringify({
           to: telEl.value,
-          body: 'Play WebVR now! ' + state.serverOrigin + state.rootPath + remoteCode
+          body: 'Play WebVR now! ' + urlToSend
         }));
       });
       pairFormEl.addEventListener('input', function () {
