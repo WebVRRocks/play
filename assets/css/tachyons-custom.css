@@ -21,7 +21,7 @@ pre,
 [class*="overflow-scroll"],
 [class*="overflow-x-scroll"],
 [class*="overflow-y-scroll"] {
-  -webkit-overflow-scrolling: touch;
+  /*-webkit-overflow-scrolling: touch;*/
 }
 
 .vh-72 {
