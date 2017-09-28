@@ -306,6 +306,11 @@
         xhr.open('post', remoteSocketOrigin + '/sms');
         xhr.setRequestHeader('Content-Type', 'application/json');
 
+        xhr.addEventListener('load', function () {
+          routeUpdate(state.rootPath, true);
+          SpatialNavigation.focus();
+        });
+
         // var urlToSend = state.serverOrigin + state.rootPath + remoteCode;
         var urlToSend = remoteSocketOrigin + '/' + remoteCode;
 
