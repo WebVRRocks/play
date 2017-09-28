@@ -123,6 +123,9 @@ new Promise((resolve, reject) => {
   const socketpeerRunningLocally = statusCode === 200;
   startServer(socketpeerRunningLocally);
 }).catch(err => {
+  if (!remoteSocketPath) {
+    remoteSocketPath = getRemoteSocketPath(remoteHttps, remoteHost, remotePort);
+  }
   console.warn(`Could not reach Remote Control server: ${remoteSocketPath}`);
   startServer(false);
 });
