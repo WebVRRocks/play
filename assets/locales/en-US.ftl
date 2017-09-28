@@ -1,4 +1,4 @@
-title_default = Play WebVR • Explore Virtual Reality on the Web
+title_default = Mozilla Galaxy • Explore Virtual Reality on the Web
 title_page = { $title } • WebVR
 
 play = Play
@@ -66,10 +66,10 @@ polyfill_v2 = WebVR API v2 Polyfill
 
 load_a_new_site = Load a new site
 
-welcome_to_webvr = Welcome to WebVR
+welcome = Galaxy
 
 pair_your_phone = Pair your phone
 phone_number = Phone number
-remote_control_with_your_phone = Remote control with your phone
+remote_control = Pair phone as remote
 enter_your_phone_number
   .placeholder = Enter your phone number
