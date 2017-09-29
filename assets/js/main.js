@@ -4,6 +4,7 @@
     rootPath: '/',
     serverOrigin: 'https://play.webvr.rocks',
     remoteSocketPath: 'https://remote.webvr.rocks/socketpeer/',
+    remoteSocketOrigin: 'https://remote.webvr.rocks',
     supports: {}
   };
   window.state = state;
@@ -25,6 +26,19 @@
         console.error('Service Worker registration failed:', err);
       });
     }
+  }
+
+  function getOrigin (url) {
+    var origin = null;
+    if ('URL' in window) {
+      return new URL(url).origin;
+    }
+    var a = document.createElement('a');
+    a.href = url;
+    if (a.origin) {
+      return a.origin;
+    }
+    return a.protocol + '//' + a.host;
   }
 
   // Adapted from source: https://github.com/feross/arch/blob/master/browser.js
@@ -260,6 +274,7 @@
     state.rootPath = htmlEl.getAttribute('data-root') || state.rootPath;
     state.serverOrigin = htmlEl.getAttribute('data-server-origin') || state.serverOrigin;
     state.remoteSocketPath = htmlEl.getAttribute('data-remote-socket-path') || state.remoteSocketPath;
+    state.remoteSocketOrigin = getOrigin(htmlEl.getAttribute('data-remote-socket-origin') || state.remoteSocketPath);
 
     sceneEl = document.querySelector('#scene');  // This element is the `<iframe>` container for the current scene.
 
@@ -286,28 +301,20 @@
         }
 
         if (!remoteCode) {
-          throw 'No remote code';
-        }
-
-        var remoteSocketOrigin = null;
-        if ('URL' in window) {
-          remoteSocketOrigin = new URL(state.remoteSocketPath).origin;
-        }
-        if (!remoteSocketOrigin) {
-          var a = document.createElement('a');
-          a.href = state.remoteSocketPath;
-          remoteSocketOrigin = state.remoteSocketPath.origin;
-        }
-        if (!remoteSocketOrigin) {
-          throw 'No remote socket';
+          throw new Error('No remote code');
         }
 
         var xhr = new XMLHttpRequest();
-        xhr.open('post', remoteSocketOrigin + '/sms');
+        xhr.open('post', state.remoteSocketOrigin + '/sms');
         xhr.setRequestHeader('Content-Type', 'application/json');
 
+        xhr.addEventListener('load', function () {
+          routeUpdate(state.rootPath, true);
+          SpatialNavigation.focus();
+        });
+
         // var urlToSend = state.serverOrigin + state.rootPath + remoteCode;
-        var urlToSend = remoteSocketOrigin + '/' + remoteCode;
+        var urlToSend = state.remoteSocketOrigin + '/' + remoteCode;
 
         xhr.send(JSON.stringify({
           to: telEl.value,
