@@ -9,6 +9,16 @@
     remoteEl.setAttribute('data-remote-state', 'pending');
   }
 
+  function getPathname (url) {
+    var pathname = null;
+    if ('URL' in window) {
+      return new URL(url).pathname;
+    }
+    var a = document.createElement('a');
+    a.href = url;
+    return a.pathname;
+  }
+
   function Dependencies () {
     this.scripts = {};
   }
@@ -109,6 +119,20 @@
         } catch (err) {
         }
         return peerConnect(code);
+      } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', state.remoteSocketOrigin);
+        xhr.addEventListener('readystatechange', function () {
+          // TODO: Update PIN on page.
+          try {
+            code = window.localStorage.remote_code = getPathname(xhr.responseURL).substr(1);
+          } catch (err) {
+          }
+          if (code) {
+            peerConnect(code);
+          }
+        });
+        xhr.send();
       }
 
       return null;
