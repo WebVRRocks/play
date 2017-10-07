@@ -2,7 +2,7 @@
 
 A kiosk for launching and testing WebVR scenes.
 
-[Load **play.webvr.rocks** now!]
+[Load **play.webvr.rocks** now!](https://play.webvr.rocks/)
 
 
 ### Development
